@@ -4,13 +4,18 @@ import (
 	//sdkArgs "github.com/newrelic/infra-integrations-sdk/args"
 	//"github.com/newrelic/infra-integrations-sdk/data/event"
 	//"github.com/newrelic/infra-integrations-sdk/data/metric"
-	//"github.com/newrelic/infra-integrations-sdk/integration"
+	"github.com/mitchellh/mapstructure"
+	"github.com/newrelic/infra-integrations-sdk/integration"
+	//"github.com/newrelic/infra-integrations-sdk/log"
 	//"encoding/binary"
-	"bufio"
+	//"bufio"
 	"bytes"
 	"fmt"
 	"github.com/lunixbochs/struc"
+	"io"
 	"net"
+	"regexp"
+	//"strconv"
 )
 
 // More info about the binary protocol here: https://github.com/memcached/memcached/wiki/BinaryProtocolRevamped
@@ -46,25 +51,136 @@ const (
 )
 
 func main() {
-	items := "items"
-	slabs := "slabs"
-	getStats(nil)
-	getStats(&items)
-	getStats(&slabs)
+	println("==== STATS ====")
+	stats := getStats("")
+	processGeneralStats(stats, nil)
+
+	println("==== ITEMS ====")
+	items := getStats("items")
+	processItemStats(items, nil)
+
+	println("==== SLABS ====")
+	slabs := getStats("slabs")
+	processSlabStats(slabs, nil)
+	// TODO close the server connection with quit
+}
+
+// TODO get inventory with "stats settings"
+
+func processGeneralStats(stats map[string]string, i *integration.Integration) {
+	var s GeneralStats
+	config := mapstructure.DecoderConfig{
+		WeaklyTypedInput: true,
+		Result:           &s,
+	}
+
+	decoder, err := mapstructure.NewDecoder(&config)
+	if err != nil {
+		panic("unreachable")
+	}
+	decoder.Decode(stats)
+
+	fmt.Printf("%#v\n", s)
+}
+
+func processItemStats(stats map[string]string, i *integration.Integration) {
+	slabs := partitionItemsBySlabID(stats)
+	for slabID, slabMetrics := range slabs {
+		var s ItemStats
+		config := mapstructure.DecoderConfig{
+			WeaklyTypedInput: true,
+			Result:           &s,
+		}
+
+		decoder, err := mapstructure.NewDecoder(&config)
+		if err != nil {
+			panic("unreachable")
+		}
+		decoder.Decode(slabMetrics)
+
+		fmt.Printf("%s, %#v\n", slabID, s)
+	}
+}
+
+func partitionItemsBySlabID(items map[string]string) map[string]map[string]string {
+	pattern := regexp.MustCompile(`items:(\d+):([a-z_]+)`)
+
+	returnMap := make(map[string]map[string]string)
+	for key, val := range items {
+		matches := pattern.FindStringSubmatch(key)
+		slabID := matches[1]
+		metricName := matches[2]
+
+		// Retrieve the slab metrics. Create it if it doesn't exist
+		slab, ok := returnMap[slabID]
+		if !ok {
+			slab = make(map[string]string)
+			returnMap[slabID] = slab
+		}
+
+		slab[metricName] = val
+	}
+
+	return returnMap
+}
+
+func processSlabStats(stats map[string]string, i *integration.Integration) {
+	// TODO do something with general statistics
+	slabs, _ := partitionSlabsBySlabID(stats)
+
+	for slabID, slabStats := range slabs {
+		var s SlabStats
+		config := mapstructure.DecoderConfig{
+			WeaklyTypedInput: true,
+			Result:           &s,
+		}
+
+		decoder, err := mapstructure.NewDecoder(&config)
+		if err != nil {
+			panic("unreachable")
+		}
+		decoder.Decode(slabStats)
+
+		fmt.Printf("%s: %#v\n", slabID, s)
+	}
+}
+
+func partitionSlabsBySlabID(slabs map[string]string) (map[string]map[string]string, map[string]string) {
+	slabPattern := regexp.MustCompile(`(\d+):([a-z_]+)`)
+	generalPattern := regexp.MustCompile(`^[a-z_]+$`)
+
+	statsMap := make(map[string]map[string]string)
+	generalMap := make(map[string]string)
+
+	for key, val := range slabs {
+		if generalPattern.MatchString(key) {
+			generalMap[key] = val
+			continue
+		}
+
+		matches := slabPattern.FindStringSubmatch(key)
+		slabID := matches[1]
+		metricName := matches[2]
+
+		// Retrieve the slab metrics. Create it if it doesn't exist
+		slab, ok := statsMap[slabID]
+		if !ok {
+			slab = make(map[string]string)
+			statsMap[slabID] = slab
+		}
+
+		slab[metricName] = val
+	}
+
+	return statsMap, generalMap
+
 }
 
 // TODO authentication
-func getStats(key *string) {
+func getStats(key string) map[string]string {
 
-	var keyBytes []byte
-	var keyLen int
-	if key != nil {
-		keyBytes = []byte(*key)
-		keyLen = len(keyBytes)
-	} else {
-		keyBytes = []byte{}
-		keyLen = 0
-	}
+	keyBytes := []byte(key)
+	keyLen := len(keyBytes)
 
 	sendHeader := &RequestHeader{
 		Magic:           0x80,
@@ -99,21 +215,26 @@ func getStats(key *string) {
 		println(err.Error())
 	}
 
-	// TODO investigate reading into the buffer dynamically
-	responseBuf := bufio.NewReaderSize(conn, 8000)
+	metrics := make(map[string]string)
 
 	for {
 
 		headerBytes := make([]byte, headerSize)
-		_, err := responseBuf.Read(headerBytes)
+		n, err := io.ReadFull(conn, headerBytes)
 		if err != nil {
 			println(err.Error())
+			break
+		}
+		if n != 24 {
+			println("didn't read 24 bytes")
+			break
 		}
 
 		header := &ResponseHeader{}
 		err = struc.Unpack(bytes.NewReader(headerBytes), header)
 		if err != nil {
 			println(err.Error())
+			break
 		}
 
 		if int(header.Status) != 0 || int(header.KeyLength) == 0 {
@@ -122,14 +243,20 @@ func getStats(key *string) {
 		}
 
 		body := make([]byte, header.TotalBodyLength)
-		_, err = responseBuf.Read(body)
+		n, err = io.ReadFull(conn, body)
 		if err != nil {
 			println(err.Error())
+			break
+		}
+		if n != header.TotalBodyLength {
+			println("didn't read full body")
 		}
 
-		key := body[header.ExtrasLength:header.KeyLength]
-		value := body[header.KeyLength+header.ExtrasLength:]
+		key := string(body[header.ExtrasLength : header.KeyLength+header.ExtrasLength])
+		value := string(body[header.KeyLength+header.ExtrasLength:])
 
-		fmt.Printf("%s: %s\n", string(key), string(value))
+		metrics[key] = value
 	}
+
+	return metrics
 }
