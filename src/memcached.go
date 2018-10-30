@@ -4,68 +4,46 @@ import (
 	//sdkArgs "github.com/newrelic/infra-integrations-sdk/args"
 	//"github.com/newrelic/infra-integrations-sdk/data/event"
 	//"github.com/newrelic/infra-integrations-sdk/data/metric"
-	"github.com/mitchellh/mapstructure"
-	"github.com/newrelic/infra-integrations-sdk/integration"
-	//"github.com/newrelic/infra-integrations-sdk/log"
-	//"encoding/binary"
-	//"bufio"
-	"bytes"
+	"bufio"
 	"fmt"
-	"github.com/lunixbochs/struc"
-	"io"
+	"github.com/mitchellh/mapstructure"
+	"github.com/newrelic/infra-integrations-sdk/data/metric"
+	"github.com/newrelic/infra-integrations-sdk/integration"
+	"github.com/newrelic/infra-integrations-sdk/log"
 	"net"
 	"regexp"
-	//"strconv"
 )
 
-// More info about the binary protocol here: https://github.com/memcached/memcached/wiki/BinaryProtocolRevamped
-
-// RequestHeader is a marshalling struct for the memcached binary header format
-type RequestHeader struct {
-	Magic           byte
-	Opcode          byte
-	KeyLength       int `struc:"int16"`
-	ExtrasLength    int `struc:"int8"`
-	DataType        byte
-	VBucketID       int `struc:"int16"`
-	TotalBodyLength int `struc:"int32"`
-	Opaque          [4]byte
-	CAS             [8]byte
-}
-
-// ResponseHeader is a marshalling struct for the memcached binary header format
-type ResponseHeader struct {
-	Magic           byte
-	Opcode          byte
-	KeyLength       int `struc:"int16"`
-	ExtrasLength    int `struc:"int8"`
-	DataType        byte
-	Status          int `struc:"int16"`
-	TotalBodyLength int `struc:"int32"`
-	Opaque          [4]byte
-	CAS             [8]byte
-}
-
 const (
-	headerSize = 24
+	integrationName    = "com.newrelic.memcached"
+	integrationVersion = "0.1.0"
+)
+
+var (
+	args arguments.ArgumentList
 )
 
 func main() {
-	println("==== STATS ====")
-	stats := getStats("")
-	processGeneralStats(stats, nil)
 
-	println("==== ITEMS ====")
+	memcachedIntegration, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
+	if err != nil {
+		log.Error("Failed to create integration")
+	}
+
+	generalStats := getStats("")
+	processGeneralStats(generalStats, memcachedIntegration)
+
 	items := getStats("items")
-	processItemStats(items, nil)
+	processItemStats(items, memcachedIntegration)
 
-	println("==== SLABS ====")
 	slabs := getStats("slabs")
-	processSlabStats(slabs, nil)
-	// TODO close the server connection with quit
-}
+	processSlabStats(slabs, memcachedIntegration)
 
-// TODO get inventory with "stats settings"
+	settings := getStats("settings")
+	processSettings(settings, memcachedIntegration)
+
+	memcachedIntegration.Publish()
+}
 
 func processGeneralStats(stats map[string]string, i *integration.Integration) {
 	var s GeneralStats
@@ -80,7 +58,40 @@ func processGeneralStats(stats map[string]string, i *integration.Integration) {
 	}
 	decoder.Decode(stats)
 
-	fmt.Printf("%#v\n", s)
+	// Calculate post-processed metrics
+	if s.Bytes == nil || s.CurrItems == nil {
+		return
+	}
+	averageSize := float64(*s.Bytes) / float64(*s.CurrItems)
+	s.AverageItemSize = &averageSize
+
+	if s.LimitMaxbytes == nil {
+		return
+	}
+	percentMaxUsed := float64(*s.Bytes) / float64(*s.LimitMaxbytes) * 100.0
+	s.PercentMaxUsed = &percentMaxUsed
+
+	if s.CmdGet == nil || s.GetHits == nil {
+		return
+	}
+	getHitPercent := float64(*s.GetHits) / float64(*s.CmdGet) * 100.0
+	s.GetHitPercent = &getHitPercent
+
+	if s.Uptime == nil {
+		return
+	}
+	uptimeMilliseconds := *s.Uptime * 1000
+	s.UptimeMilliseconds = &uptimeMilliseconds
+
+	e, _ := i.Entity("test", "instance")
+	ms := e.NewMetricSet("MemcachedSample",
+		metric.Attribute{Key: "displayName", Value: "test"},
+		metric.Attribute{Key: "entityName", Value: "test"}, // TODO change the naming
+	)
+	err = ms.MarshalMetrics(s)
+	if err != nil {
+		println(err.Error())
+	}
 }
 
 func processItemStats(stats map[string]string, i *integration.Integration) {
@@ -98,7 +109,16 @@ func processItemStats(stats map[string]string, i *integration.Integration) {
 		}
 		decoder.Decode(slabMetrics)
 
-		fmt.Printf("%s, %#v\n", slabID, s)
+		e, _ := i.Entity("slab"+slabID, "slab")
+		ms := e.NewMetricSet("MemcachedSlabSample",
+			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
+			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
+		)
+		err = ms.MarshalMetrics(s)
+		if err != nil {
+			println(err.Error())
+		}
+
 	}
 }
 
@@ -141,7 +161,16 @@ func processSlabStats(stats map[string]string, i *integration.Integration) {
 		}
 		decoder.Decode(slabStats)
 
-		fmt.Printf("%s: %#v\n", slabID, s)
+		e, _ := i.Entity("slab"+slabID, "slab")
+		ms := e.NewMetricSet("MemcachedSlabSample",
+			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
+			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
+		)
+		err = ms.MarshalMetrics(s)
+		if err != nil {
+			println(err.Error())
+		}
+
 	}
 }
 
@@ -176,87 +205,53 @@ func partitionSlabsBySlabID(slabs map[string]string) (map[string]map[string]stri
 
 }
 
+func processSettings(settings map[string]string, i *integration.Integration) {
+	e, _ := i.Entity("test", "test") // TODO rename
+	for key, value := range settings {
+		if err := e.SetInventoryItem(key, "value", value); err != nil {
+			log.Error("Failed to set inventory item for key %s: %s", key, err.Error())
+		}
+
+	}
+}
+
 // TODO authentication
 func getStats(key string) map[string]string {
-
-	keyBytes := []byte(key)
-	keyLen := len(keyBytes)
-
-	sendHeader := &RequestHeader{
-		Magic:           0x80,
-		Opcode:          0x10,
-		KeyLength:       keyLen,
-		ExtrasLength:    0x00,
-		DataType:        0x00,
-		VBucketID:       0x0000,
-		TotalBodyLength: keyLen,
-		Opaque:          [4]byte{0x01, 0x01, 0x01, 0x01},
-		CAS:             [8]byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-	}
-
-	var sendBuf bytes.Buffer
-
-	err := struc.Pack(&sendBuf, sendHeader)
-	if err != nil {
-		println(err.Error())
-	}
-	_, err = sendBuf.Write(keyBytes)
-	if err != nil {
-		println(err.Error())
-	}
 
 	conn, err := net.Dial("tcp", "mc-14-1:11211")
 	if err != nil {
 		println(err.Error())
 	}
 
-	_, err = conn.Write(sendBuf.Bytes())
+	_, err = conn.Write([]byte(fmt.Sprintf("stats %s\n", key)))
 	if err != nil {
 		println(err.Error())
 	}
 
-	metrics := make(map[string]string)
+	response := bufio.NewReader(conn)
+	endRegex := regexp.MustCompile(`^END`)
+	statRegex := regexp.MustCompile(`^STAT ([:a-z0-9_]+) ([^\s]+)`)
+
+	returnMap := make(map[string]string)
 
 	for {
-
-		headerBytes := make([]byte, headerSize)
-		n, err := io.ReadFull(conn, headerBytes)
+		line, err := response.ReadBytes('\n')
 		if err != nil {
-			println(err.Error())
-			break
-		}
-		if n != 24 {
-			println("didn't read 24 bytes")
 			break
 		}
 
-		header := &ResponseHeader{}
-		err = struc.Unpack(bytes.NewReader(headerBytes), header)
-		if err != nil {
-			println(err.Error())
+		if endRegex.Match(line) {
 			break
 		}
 
-		if int(header.Status) != 0 || int(header.KeyLength) == 0 {
-			// TODO handle error cases more gracefully
-			break
+		matches := statRegex.FindSubmatch(line)
+		if len(matches) != 3 {
+			println("Bad stats form")
 		}
 
-		body := make([]byte, header.TotalBodyLength)
-		n, err = io.ReadFull(conn, body)
-		if err != nil {
-			println(err.Error())
-			break
-		}
-		if n != header.TotalBodyLength {
-			println("didn't read full body")
-		}
+		returnMap[string(matches[1])] = string(matches[2])
 
-		key := string(body[header.ExtrasLength : header.KeyLength+header.ExtrasLength])
-		value := string(body[header.KeyLength+header.ExtrasLength:])
-
-		metrics[key] = value
 	}
 
-	return metrics
+	return returnMap
 }
