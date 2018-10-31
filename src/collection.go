@@ -10,7 +10,7 @@ import (
 	"github.com/newrelic/infra-integrations-sdk/log"
 )
 
-// CollectGeneralStats collects general stats from the client
+// CollectGeneralStats collects general stats from the client and populates them into the integration
 func CollectGeneralStats(client *mc.Client, i *integration.Integration) {
 	generalStats, err := client.StatsWithKey("")
 	if err != nil {
@@ -18,13 +18,17 @@ func CollectGeneralStats(client *mc.Client, i *integration.Integration) {
 		return
 	}
 	// Usually only one
-	for server, serverStats := range generalStats {
-		e, _ := i.Entity(server, "server")
-		processGeneralStats(serverStats, e)
+	for host, hostStats := range generalStats {
+		e, err := i.Entity(host, "instance")
+		if err != nil {
+			log.Error("Failed to retrieve entity for instance %s: %s", host, err.Error())
+		}
+
+		processGeneralStats(hostStats, e)
 	}
 }
 
-// CollectSlabStats collects slab stats from the client
+// CollectSlabStats collects slab stats from the client and populates them into the integration
 func CollectSlabStats(client *mc.Client, i *integration.Integration) {
 	slabStats, err := client.StatsWithKey("slabs")
 	if err != nil {
@@ -37,7 +41,7 @@ func CollectSlabStats(client *mc.Client, i *integration.Integration) {
 	}
 }
 
-// CollectItemStats collects item stats from the client
+// CollectItemStats collects item stats from the client and populates them into the integration
 func CollectItemStats(client *mc.Client, i *integration.Integration) {
 	itemStats, err := client.StatsWithKey("items")
 	if err != nil {
@@ -50,7 +54,7 @@ func CollectItemStats(client *mc.Client, i *integration.Integration) {
 	}
 }
 
-// CollectSettings collects the list of settings and from the client
+// CollectSettings collects the list of settings and from the client and populates them into the integration
 func CollectSettings(client *mc.Client, i *integration.Integration) {
 	settingsResult, err := client.StatsWithKey("setting")
 	if err != nil {
@@ -80,6 +84,21 @@ func processGeneralStats(stats map[string]string, e *integration.Entity) {
 		log.Error("Failed to decode map: %s", err.Error())
 	}
 
+	calculateProcessedMetrics(&s)
+
+	// Create metric set
+	ms := e.NewMetricSet("MemcachedSample",
+		metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
+		metric.Attribute{Key: "entityName", Value: "instance:" + e.Metadata.Name},
+	)
+
+	err = ms.MarshalMetrics(s)
+	if err != nil {
+		log.Error("Failed to marshal general statistics: %s", err.Error())
+	}
+}
+
+func calculateProcessedMetrics(s *GeneralStats) {
 	// Calculate post-processed metrics
 	if s.Bytes == nil || s.CurrItems == nil {
 		log.Error("Failed to collect metrics needed to calculate averageItemSize")
@@ -107,17 +126,6 @@ func processGeneralStats(stats map[string]string, e *integration.Entity) {
 	} else {
 		uptimeMilliseconds := *s.Uptime * 1000
 		s.UptimeMilliseconds = &uptimeMilliseconds
-	}
-
-	// Create metric set
-	ms := e.NewMetricSet("MemcachedSample",
-		metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
-		metric.Attribute{Key: "entityName", Value: "instance:" + e.Metadata.Name},
-	)
-
-	err = ms.MarshalMetrics(s)
-	if err != nil {
-		log.Error("Failed to marshal general statistics: %s", err.Error())
 	}
 }
 

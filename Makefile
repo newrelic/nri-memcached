@@ -1,6 +1,6 @@
 NATIVEOS	 := $(shell go version | awk -F '[ /]' '{print $$4}')
 NATIVEARCH	 := $(shell go version | awk -F '[ /]' '{print $$5}')
-INTEGRATION  := memcached 
+INTEGRATION  := memcached
 BINARY_NAME   = nr-$(INTEGRATION)
 GO_PKGS      := $(shell go list ./... | grep -v "/vendor/")
 GO_FILES     := $(shell find src -type f -name "*.go")
