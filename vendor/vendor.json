@@ -9,6 +9,18 @@
 			"revisionTime": "2018-02-21T22:46:20Z"
 		},
 		{
+			"checksumSHA1": "iho/916QE6QPJJ6Mat2sAXUt9CU=",
+			"path": "github.com/memcachier/mc",
+			"revision": "747ff0ff994b915057178f549632aafc67b70c82",
+			"revisionTime": "2018-08-31T07:31:19Z"
+		},
+		{
+			"checksumSHA1": "J+g0oZePWp2zSIISD2dZZKTxmgg=",
+			"path": "github.com/mitchellh/mapstructure",
+			"revision": "3536a929edddb9a5b34bd6861dc4a9647cb459fe",
+			"revisionTime": "2018-10-05T04:51:35Z"
+		},
+		{
 			"checksumSHA1": "WUtPqOvTzvtf4U6AYPwHpEkr3Do=",
 			"path": "github.com/newrelic/infra-integrations-sdk/args",
 			"revision": "dfb3835de5836e1942bbd92eb24e09866a83e1ac",
