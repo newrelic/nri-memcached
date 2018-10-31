@@ -5,9 +5,9 @@ type GeneralStats struct {
 	Bytes                  *int     `mapstructure:"bytes"                 metric_name:"bytesUsedServerInBytes"            source_type:"gauge"`
 	CurrItems              *int     `mapstructure:"curr_items"            metric_name:"currentItemsStoredServer"          source_type:"gauge"`
 	TotalItems             *int     `mapstructure:"total_items"           metric_name:"itemsStoredPerSecond"              source_type:"rate"`
-	AverageItemSize        *float64 `                                     metric_name:"avgItemSizeInBytes"                source_type:"gauge"` // TODO calculate
+	AverageItemSize        *float64 `                                     metric_name:"avgItemSizeInBytes"                source_type:"gauge"`
 	LimitMaxbytes          *int     `mapstructure:"limit_maxbytes"        metric_name:"limitBytesStorage"                 source_type:"rate"`
-	PercentMaxUsed         *float64 `                                     metric_name:"storingItemsPercentMemory"         source_type:"gauge"` // TODO calculate
+	PercentMaxUsed         *float64 `                                     metric_name:"storingItemsPercentMemory"         source_type:"gauge"`
 	BytesRead              *int     `mapstructure:"bytes_read"            metric_name:"bytesReadServerPerSecond"          source_type:"rate"`
 	BytesWritten           *int     `mapstructure:"bytes_written"         metric_name:"bytesWrittenServerPerSecond"       source_type:"rate"`
 	DeleteHits             *int     `mapstructure:"delete_hits"           metric_name:"deleteCmdRemovedPerSecond"         source_type:"rate"`
@@ -21,7 +21,7 @@ type GeneralStats struct {
 	GetMisses              *int     `mapstructure:"get_misses"            metric_name:"getMissPerSecond"                  source_type:"rate"`
 	GetExpired             *int     `mapstructure:"get_expired"`
 	GetFlushed             *int     `mapstructure:"get_flushed"`
-	GetHitPercent          *float64 `                                     metric_name:"getHitPercent"                     source_type:"gauge"` // TODO calculate
+	GetHitPercent          *float64 `                                     metric_name:"getHitPercent"                     source_type:"gauge"`
 	CmdGet                 *int     `mapstructure:"cmd_get"               metric_name:"cmdGetRatePerSecond"               source_type:"rate"`
 	CmdSet                 *int     `mapstructure:"cmd_set"               metric_name:"cmdSetRatePerSecond"               source_type:"rate"`
 	CmdFlush               *int     `mapstructure:"cmd_flush"             metric_name:"cmdFlushRatePerSecond"             source_type:"rate"`
@@ -46,7 +46,7 @@ type GeneralStats struct {
 	AuthErrors             *int     `mapstructure:"auth_errors"`
 	HashBytes              *int     `mapstructure:"hash_bytes"`
 	Uptime                 *int     `mapstructure:"uptime"`
-	UptimeMilliseconds     *int     `                                     metric_name:"uptimeInMilliseconds"              source_type:"gauge"` // TODO calculate
+	UptimeMilliseconds     *int     `                                     metric_name:"uptimeInMilliseconds"              source_type:"gauge"`
 	IncrHits               *int     `mapstructure:"incr_hits"`
 	DecrMisses             *int     `mapstructure:"decr_misses"`
 	AuthCmds               *int     `mapstructure:"auth_cmds"`
@@ -67,6 +67,7 @@ type GeneralStats struct {
 	LogWorkerWritten       *int     `mapstructure:"log_worker_written"`
 }
 
+// ItemStats is a struct which is used to marshal metrics into a metric set
 type ItemStats struct {
 	EvictedTime         *int `mapstructure:"evicted_time"      metric_name:"itemsTimeSinceEvictionInMilliseconds"       source_type:"gauge"`
 	Evicted             *int `mapstructure:"evicted"           metric_name:"evictionsBeforeExpirationPerSecond"         source_type:"rate"`
@@ -90,8 +91,7 @@ type ItemStats struct {
 	MovesWithinLRU      *int `mapstructure:"moves_within_lru"  metric_name:"activeItemsBumpedPerSecond"                 source_type:"rate"`
 }
 
-// TODO make all pointers
-
+// SlabStats is a struct which is used to marshal metrics into a metric set
 type SlabStats struct {
 	GetHits             *int `mapstructure:"get_hits"        metric_name:"getHitRateSlabPerSecond"          source_type:"rate"`
 	CmdSet              *int `mapstructure:"cmd_set"         metric_name:"cmdSetRateSlabPerSecond"          source_type:"rate"`
@@ -112,6 +112,7 @@ type SlabStats struct {
 	MemRequested        *int `mapstructure:"mem_requested"   metric_name:"memRequestedSlabInBytesPerSecond" source_type:"rate"`
 }
 
+// ClusterSlabStats is a struct which is used to marshal metrics into a metric set
 type ClusterSlabStats struct {
 	ActiveSlabs   *int `mapstructure:"active_slabs"   metric_name:"activeSlabs"              source_type:"gauge"`
 	TotalMalloced *int `mapstructure:"total_malloced" metric_name:"memAllocatedSlabsInBytes" source_type:"gauge"`
