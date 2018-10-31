@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"regexp"
 
+	"github.com/memcachier/mc"
+	"github.com/mitchellh/mapstructure"
+	"github.com/newrelic/infra-integrations-sdk/data/metric"
+	"github.com/newrelic/infra-integrations-sdk/integration"
+	"github.com/newrelic/infra-integrations-sdk/log"
+)
+
+// CollectGeneralStats collects general stats from the client
 func CollectGeneralStats(client *mc.Client, i *integration.Integration) {
 	generalStats, err := client.StatsWithKey("")
 	if err != nil {
@@ -15,7 +24,8 @@ func CollectGeneralStats(client *mc.Client, i *integration.Integration) {
 	}
 }
 
-func CollectSlabsStats(client *mc.Client, i *integration.Integration) {
+// CollectSlabStats collects slab stats from the client
+func CollectSlabStats(client *mc.Client, i *integration.Integration) {
 	slabStats, err := client.StatsWithKey("slabs")
 	if err != nil {
 		log.Error("Failed to retrieve slabs stats: %s", err.Error())
@@ -27,7 +37,8 @@ func CollectSlabsStats(client *mc.Client, i *integration.Integration) {
 	}
 }
 
-func CollectItemsStats(client *mc.Client, i *integration.Integration) {
+// CollectItemStats collects item stats from the client
+func CollectItemStats(client *mc.Client, i *integration.Integration) {
 	itemStats, err := client.StatsWithKey("items")
 	if err != nil {
 		log.Error("Failed to retrieve items stats: %s", err.Error())
@@ -36,6 +47,19 @@ func CollectItemsStats(client *mc.Client, i *integration.Integration) {
 	// Usually only one
 	for _, serverStats := range itemStats {
 		processItemStats(serverStats, i)
+	}
+}
+
+// CollectSettings collects the list of settings and from the client
+func CollectSettings(client *mc.Client, i *integration.Integration) {
+	settingsResult, err := client.StatsWithKey("setting")
+	if err != nil {
+		log.Error("Failed to retrieve settings: %s", err.Error())
+		return
+	}
+	// Usually only one
+	for host, settings := range settingsResult {
+		processSettings(settings, i, host)
 	}
 }
 
@@ -51,7 +75,10 @@ func processGeneralStats(stats map[string]string, e *integration.Entity) {
 		log.Error("Failed to create map decoder: %s", err.Error())
 		return
 	}
-	decoder.Decode(stats)
+	err = decoder.Decode(stats)
+	if err != nil {
+		log.Error("Failed to decode map: %s", err.Error())
+	}
 
 	// Calculate post-processed metrics
 	if s.Bytes == nil || s.CurrItems == nil {
@@ -108,7 +135,11 @@ func processItemStats(stats map[string]string, i *integration.Integration) {
 			log.Error("Failed to create map decoder: %s", err.Error())
 			return
 		}
-		decoder.Decode(slabMetrics)
+
+		err = decoder.Decode(slabMetrics)
+		if err != nil {
+			log.Error("Failed to decode map: %s", err.Error())
+		}
 
 		e, _ := i.Entity(slabID, "slab")
 		ms := e.NewMetricSet("MemcachedSlabSample",
@@ -148,16 +179,7 @@ func partitionItemsBySlabID(items map[string]string) map[string]map[string]strin
 
 func processSlabStats(stats map[string]string, i *integration.Integration, host string) {
 	slabs, clusterStats := partitionSlabsBySlabID(stats)
-
-	instanceEntity, _ := i.Entity(host, "instance")
-	ms := instanceEntity.NewMetricSet("MemcachedSample",
-		metric.Attribute{Key: "displayName", Value: instanceEntity.Metadata.Name},
-		metric.Attribute{Key: "entityName", Value: "instance:" + instanceEntity.Metadata.Name},
-	)
-	err := ms.MarshalMetrics(clusterStats)
-	if err != nil {
-		log.Error("Failed to marshal slabs metrics: %s", err.Error())
-	}
+	processClusterSlabStats(clusterStats, i, host)
 
 	for slabID, slabStats := range slabs {
 		var s SlabStats
@@ -171,7 +193,10 @@ func processSlabStats(stats map[string]string, i *integration.Integration, host 
 			log.Error("Failed to create map decoder: %s", err.Error())
 			return
 		}
-		decoder.Decode(slabStats)
+		err = decoder.Decode(slabStats)
+		if err != nil {
+			log.Error("Failed to decode map: %s", err.Error())
+		}
 
 		e, _ := i.Entity(slabID, "slab")
 		ms := e.NewMetricSet("MemcachedSlabSample",
@@ -185,6 +210,35 @@ func processSlabStats(stats map[string]string, i *integration.Integration, host 
 		}
 
 	}
+}
+
+func processClusterSlabStats(stats map[string]string, i *integration.Integration, host string) {
+	var c ClusterSlabStats
+	config := mapstructure.DecoderConfig{
+		WeaklyTypedInput: true,
+		Result:           &c,
+	}
+
+	decoder, err := mapstructure.NewDecoder(&config)
+	if err != nil {
+		log.Error("Failed to create map decoder: %s", err.Error())
+		return
+	}
+	err = decoder.Decode(stats)
+	if err != nil {
+		log.Error("Failed to decode map: %s", err.Error())
+	}
+
+	instanceEntity, _ := i.Entity(host, "instance")
+	ms := instanceEntity.NewMetricSet("MemcachedSample",
+		metric.Attribute{Key: "displayName", Value: instanceEntity.Metadata.Name},
+		metric.Attribute{Key: "entityName", Value: "instance:" + instanceEntity.Metadata.Name},
+	)
+	err = ms.MarshalMetrics(c)
+	if err != nil {
+		log.Error("Failed to marshal slabs metrics: %s", err.Error())
+	}
+
 }
 
 func partitionSlabsBySlabID(slabs map[string]string) (map[string]map[string]string, map[string]string) {
@@ -216,18 +270,6 @@ func partitionSlabsBySlabID(slabs map[string]string) (map[string]map[string]stri
 
 	return statsMap, generalMap
 
-}
-
-func CollectSettings(client *mc.Client, i *integration.Integration) {
-	settingsResult, err := client.StatsWithKey("setting")
-	if err != nil {
-		log.Error("Failed to retrieve settings: %s", err.Error())
-		return
-	}
-	// Usually only one
-	for host, settings := range settingsResult {
-		processSettings(settings, i, host)
-	}
 }
 
 func processSettings(settings map[string]string, i *integration.Integration, host string) {

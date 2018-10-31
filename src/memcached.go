@@ -2,13 +2,11 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/memcachier/mc"
-	"github.com/mitchellh/mapstructure"
 	sdkArgs "github.com/newrelic/infra-integrations-sdk/args"
-	"github.com/newrelic/infra-integrations-sdk/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/integration"
 	"github.com/newrelic/infra-integrations-sdk/log"
-	"regexp"
 )
 
 const (
@@ -41,8 +39,8 @@ func main() {
 
 	if args.HasMetrics() {
 		CollectGeneralStats(client, memcachedIntegration)
-		CollectSlabsStats(client, memcachedIntegration)
-		CollectItemsStats(client, memcachedIntegration)
+		CollectSlabStats(client, memcachedIntegration)
+		CollectItemStats(client, memcachedIntegration)
 	}
 
 	if args.HasInventory() {
