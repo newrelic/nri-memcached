@@ -27,8 +27,3 @@ commands:
       - --inventory
     prefix: config/nr-memcached
     interval: 15
-  events:
-    command:
-    - ./bin/nr-memcached
-    - --events
-    interval: 15
