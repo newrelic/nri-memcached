@@ -3,7 +3,6 @@ package main
 import (
 	"regexp"
 
-	"github.com/memcachier/mc"
 	"github.com/mitchellh/mapstructure"
 	"github.com/newrelic/infra-integrations-sdk/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/integration"
@@ -11,13 +10,14 @@ import (
 )
 
 // CollectGeneralStats collects general stats from the client and populates them into the integration
-func CollectGeneralStats(client *mc.Client, i *integration.Integration) {
+func CollectGeneralStats(client Client, i *integration.Integration) {
 	generalStats, err := client.StatsWithKey("")
 	if err != nil {
 		log.Error("Failed to retrieve general stats: %s", err.Error())
 		return
 	}
-	// Usually only one
+
+	// We will only get one host back
 	for host, hostStats := range generalStats {
 		e, err := i.Entity(host, "instance")
 		if err != nil {
@@ -29,20 +29,21 @@ func CollectGeneralStats(client *mc.Client, i *integration.Integration) {
 }
 
 // CollectSlabStats collects slab stats from the client and populates them into the integration
-func CollectSlabStats(client *mc.Client, i *integration.Integration) {
+func CollectSlabStats(client Client, i *integration.Integration) {
 	slabStats, err := client.StatsWithKey("slabs")
 	if err != nil {
 		log.Error("Failed to retrieve slabs stats: %s", err.Error())
 		return
 	}
-	// Usually only one
+
+	// We will only get one host back
 	for server, serverStats := range slabStats {
 		processSlabStats(serverStats, i, server)
 	}
 }
 
 // CollectItemStats collects item stats from the client and populates them into the integration
-func CollectItemStats(client *mc.Client, i *integration.Integration) {
+func CollectItemStats(client Client, i *integration.Integration) {
 	itemStats, err := client.StatsWithKey("items")
 	if err != nil {
 		log.Error("Failed to retrieve items stats: %s", err.Error())
@@ -55,13 +56,14 @@ func CollectItemStats(client *mc.Client, i *integration.Integration) {
 }
 
 // CollectSettings collects the list of settings and from the client and populates them into the integration
-func CollectSettings(client *mc.Client, i *integration.Integration) {
-	settingsResult, err := client.StatsWithKey("setting")
+func CollectSettings(client Client, i *integration.Integration) {
+	settingsResult, err := client.StatsWithKey("settings")
 	if err != nil {
 		log.Error("Failed to retrieve settings: %s", err.Error())
 		return
 	}
-	// Usually only one
+
+	// We will only get one host back
 	for host, settings := range settingsResult {
 		processSettings(settings, i, host)
 	}
@@ -169,6 +171,11 @@ func partitionItemsBySlabID(items map[string]string) map[string]map[string]strin
 	returnMap := make(map[string]map[string]string)
 	for key, val := range items {
 		matches := pattern.FindStringSubmatch(key)
+		if len(matches) != 3 {
+			log.Error("Failed to parse key %s", key)
+			continue
+		}
+
 		slabID := matches[1]
 		metricName := matches[2]
 
@@ -242,6 +249,7 @@ func processClusterSlabStats(stats map[string]string, i *integration.Integration
 		metric.Attribute{Key: "displayName", Value: instanceEntity.Metadata.Name},
 		metric.Attribute{Key: "entityName", Value: "instance:" + instanceEntity.Metadata.Name},
 	)
+
 	err = ms.MarshalMetrics(c)
 	if err != nil {
 		log.Error("Failed to marshal slabs metrics: %s", err.Error())
@@ -263,6 +271,10 @@ func partitionSlabsBySlabID(slabs map[string]string) (map[string]map[string]stri
 		}
 
 		matches := slabPattern.FindStringSubmatch(key)
+		if len(matches) != 3 {
+			log.Error("Failed to parse key %s", key)
+			continue
+		}
 		slabID := matches[1]
 		metricName := matches[2]
 

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/memcachier/mc"
+	"github.com/ccheek21/mc"
 	sdkArgs "github.com/newrelic/infra-integrations-sdk/args"
 	"github.com/newrelic/infra-integrations-sdk/integration"
 	"github.com/newrelic/infra-integrations-sdk/log"
