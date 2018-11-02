@@ -1,31 +1,44 @@
-# New Relic Infrastructure Integration for memcached
+# New Relic Infrastructure Integration for Memcached 
 
-Reports status and metrics for memcached service
+Reports status and metrics for Memcached service
 
 ## Requirements
 
-Document if the Integration has some special requirement. Ex: Installing an
-extra module, permissions to execute a binary, etc.
-
-## Configuration
-
-Document if the Integration needs some configuration for running. Ex: Set
-up permissions, add a special user, etc.
+None
 
 ## Installation
 
-Describe the installation process for the Integration.
+* Download an archive file for the `Memcached` Integration
+* Extract `memcached-definition.yml` and the `bin` directory into `/var/db/newrelic-infra/newrelic-integrations`
+* Add execute permissions for the binary file `nr-memcached` (if required)
+* Extract `memcached-config.yml.sample` into `/etc/newrelic-infra/integrations.d`
 
 ## Usage
 
-Document mandatory and optional arguments for running the Integration, and how to execute it.
+To run the Memcached integration, you must have the agent installed (see [agent installation](https://docs.newrelic.com/docs/infrastructure/new-relic-infrastructure/installation/install-infrastructure-linux)).
+
+To use the Memcached integration, first rename `memcached-config.yml.sample` to `memcached-config.yml`, then configure the integration
+by editing the fields in the file. 
+
+You can view your data in Insights by creating your own NRQL queries. To do so, use the **MemcachedSample** and **MemcachedSlabSample** event types.
 
 ## Compatibility
 
-* Supported OS:
-* memcached versions:
-* Edition:
+* Supported OS: No limitations
+* Memcached 1.4+ 
 
 ## Integration Development usage
 
-Describe the development workflow for this Integration.
+Assuming you have the source code, you can build and run the Memcached integration locally
+
+* Go to the directory of the Memcached Integration and build it
+```
+$ make
+```
+
+* The command above will execute tests for the Memcached integration and build an executable file called `nr-memcached` in the `bin` directory
+```
+$ ./bin/nr-memcached --help
+```
+
+For managing external dependencies, the [govendor tool](https://github.com/kardianos/govendor) is used. It is required to lock all external dependencies to a specific version (if possible) in the vendor directory.
