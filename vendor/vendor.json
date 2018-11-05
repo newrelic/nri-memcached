@@ -81,5 +81,5 @@
 			"revisionTime": "2018-06-26T19:55:58Z"
 		}
 	],
-	"rootPath": "github.com/newrelic/nri-memcached"
+	"rootPath": "github.com/newrelic/nri-f5"
 }
