@@ -1,11 +1,24 @@
 package main
 
 import (
+	"testing"
+
 	"github.com/ccheek21/mc"
 	"github.com/newrelic/infra-integrations-sdk/integration"
 	"github.com/stretchr/testify/assert"
-	"testing"
+	"github.com/stretchr/testify/mock"
 )
+
+// MockClient is a mockable client
+type MockClient struct {
+	mock.Mock
+}
+
+// StatsWithKey is a mocked version of the mc.Client object
+func (m MockClient) StatsWithKey(key string) (map[string]mc.McStats, error) {
+	args := m.Called(key)
+	return args.Get(0).(map[string]mc.McStats), args.Error(1)
+}
 
 func Test_processGeneralStats(t *testing.T) {
 	stats := map[string]string{
@@ -171,7 +184,7 @@ func Test_CollectSettings(t *testing.T) {
 			"test1": "val1",
 		},
 	}
-	client.On("StatsWithKey", "setting").Return(stats, nil)
+	client.On("StatsWithKey", "settings").Return(stats, nil)
 
 	i, _ := integration.New("test", "test")
 
