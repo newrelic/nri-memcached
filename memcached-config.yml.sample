@@ -1,24 +1,19 @@
-# Configuration file template, provided in case you want to provide extra
-# configuration over the nr-memcached-config.yml
-# file.
-#
-# For a complete description of the Configuration File Specification, please
-# refer to the Integrations SDK documentation:
-# https://docs.newrelic.com/docs/integrations/integrations-sdk/file-specifications
-
 integration_name: com.newrelic.memcached
 
 instances:
-  - name: <INSTANCE IDENTIFIER>
-    command: metrics
+  - name: memcached
+    # Command can be all_data, metrics, or inventory
+    command: all_data
     arguments:
-      arg1: <ARG_VALUE>
-    labels:
-      key1: <LABEL_VALUE>
-
-  - name: <OTHER INSTANCE IDENTIFIER>
-    command: inventory
-    arguments:
-      arg1: <ARG_VALUE>
-    labels:
-      key1: <LABEL_VALUE>
+      # Hostname of the memcached instance.
+      # Defaults to localhost.
+      host: memcached_host
+      # Port memcached is running on.
+      # Defaults to 11211
+      port: 11211
+      # Memcached SASL username. Only required if 
+      # authentication is enabled.
+      username: cacheuser
+      # Memcached SASL password. Only required if 
+      # authentication is enabled.
+      password: password
