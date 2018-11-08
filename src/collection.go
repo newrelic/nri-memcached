@@ -9,6 +9,8 @@ import (
 	"github.com/newrelic/infra-integrations-sdk/log"
 )
 
+type statsSet map[string]string
+
 // CollectGeneralStats collects general stats from the client and populates them into the integration
 func CollectGeneralStats(client Client, i *integration.Integration) {
 	generalStats, err := client.StatsWithKey("")
@@ -165,10 +167,10 @@ func processItemStats(stats map[string]string, i *integration.Integration) {
 	}
 }
 
-func partitionItemsBySlabID(items map[string]string) map[string]map[string]string {
+func partitionItemsBySlabID(items map[string]string) map[string]statsSet {
 	pattern := regexp.MustCompile(`items:(\d+):([a-z_]+)`)
 
-	returnMap := make(map[string]map[string]string)
+	partitionedMetrics := make(map[string]statsSet)
 	for key, val := range items {
 		matches := pattern.FindStringSubmatch(key)
 		if len(matches) != 3 {
@@ -180,16 +182,16 @@ func partitionItemsBySlabID(items map[string]string) map[string]map[string]strin
 		metricName := matches[2]
 
 		// Retrieve the slab metrics. Create it if it doesn't exist
-		slab, ok := returnMap[slabID]
+		slab, ok := partitionedMetrics[slabID]
 		if !ok {
 			slab = make(map[string]string)
-			returnMap[slabID] = slab
+			partitionedMetrics[slabID] = slab
 		}
 
 		slab[metricName] = val
 	}
 
-	return returnMap
+	return partitionedMetrics
 }
 
 func processSlabStats(stats map[string]string, i *integration.Integration, host string) {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ccheek21/mc"
+	"github.com/memcachier/mc"
 )
 
 // Client is an interface that represents a memcached client

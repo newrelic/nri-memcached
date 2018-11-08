@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"github.com/ccheek21/mc"
+	"github.com/memcachier/mc"
 	"github.com/newrelic/infra-integrations-sdk/integration"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
