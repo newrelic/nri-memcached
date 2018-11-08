@@ -9,10 +9,10 @@
 			"revisionTime": "2018-02-21T22:46:20Z"
 		},
 		{
-			"checksumSHA1": "iho/916QE6QPJJ6Mat2sAXUt9CU=",
+			"checksumSHA1": "I7hCxGuY6t4tnD/KQMxqCTqH428=",
 			"path": "github.com/memcachier/mc",
-			"revision": "747ff0ff994b915057178f549632aafc67b70c82",
-			"revisionTime": "2018-08-31T07:31:19Z"
+			"revision": "5d1620e2c6d86be00ea70065e3c1301ee1cb1894",
+			"revisionTime": "2018-11-03T13:09:39Z"
 		},
 		{
 			"checksumSHA1": "J+g0oZePWp2zSIISD2dZZKTxmgg=",
@@ -81,5 +81,5 @@
 			"revisionTime": "2018-06-26T19:55:58Z"
 		}
 	],
-	"rootPath": "github.com/newrelic/nri-f5"
+	"rootPath": "github.com/newrelic/nri-memcached"
 }
