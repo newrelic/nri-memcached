@@ -1,15 +1,13 @@
 package main
 
 import (
-	sdkArgs "github.com/newrelic/infra-integrations-sdk/args"
-	"github.com/newrelic/infra-integrations-sdk/data/event"
-	"github.com/newrelic/infra-integrations-sdk/data/metric"
-	"github.com/newrelic/infra-integrations-sdk/integration"
-)
+	"fmt"
 
-type argumentList struct {
-	sdkArgs.DefaultArgumentList
-}
+	"github.com/memcachier/mc"
+	sdkArgs "github.com/newrelic/infra-integrations-sdk/args"
+	"github.com/newrelic/infra-integrations-sdk/integration"
+	"github.com/newrelic/infra-integrations-sdk/log"
+)
 
 const (
 	integrationName    = "com.newrelic.memcached"
@@ -20,54 +18,36 @@ var (
 	args argumentList
 )
 
-func main() {
-	// Create Integration
-	i, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
-	panicOnErr(err)
-
-	// Create Entity, entities name must be unique
-	e1, err := i.Entity("instance-1", "custom")
-	panicOnErr(err)
-
-	// Add Event
-	if args.All() || args.Events {
-		err = e1.AddEvent(event.New("restart", "status"))
-		panicOnErr(err)
-	}
-
-	// Add Inventory item
-	if args.All() || args.Inventory {
-		err = e1.SetInventoryItem("instance", "version", "3.0.1")
-		panicOnErr(err)
-	}
-
-	// Add Metric
-	if args.All() || args.Metrics {
-		m1 := e1.NewMetricSet("CustomSample")
-		err = m1.SetMetric("some-data", 1000, metric.GAUGE)
-		panicOnErr(err)
-	}
-
-	// Create another Entity
-	e2, err := i.Entity("instance-2", "custom")
-	panicOnErr(err)
-
-	if args.All() || args.Inventory {
-		err = e2.SetInventoryItem("instance", "version", "3.0.4")
-		panicOnErr(err)
-	}
-
-	if args.All() || args.Metrics {
-		m2 := e2.NewMetricSet("CustomSample")
-		err = m2.SetMetric("some-data", 2000, metric.GAUGE)
-		panicOnErr(err)
-	}
-
-	panicOnErr(i.Publish())
+type argumentList struct {
+	sdkArgs.DefaultArgumentList
+	Host     string `default:"localhost" help:"The memcached host."`
+	Port     string `default:"11211"     help:"The memcached port."`
+	Username string `default:""          help:"The memcached SASL username."`
+	Password string `default:""          help:"The memcached SASL password."`
 }
 
-func panicOnErr(err error) {
+func main() {
+	memcachedIntegration, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
 	if err != nil {
-		panic(err)
+		log.Error("Failed to create integration: %s", err)
+		return
+	}
+
+	log.SetupLogging(args.Verbose)
+
+	client := mc.NewMC(fmt.Sprintf("%s:%s", args.Host, args.Port), args.Username, args.Password)
+
+	if args.HasMetrics() {
+		CollectGeneralStats(client, memcachedIntegration)
+		CollectSlabStats(client, memcachedIntegration)
+		CollectItemStats(client, memcachedIntegration)
+	}
+
+	if args.HasInventory() {
+		CollectSettings(client, memcachedIntegration)
+	}
+
+	if err = memcachedIntegration.Publish(); err != nil {
+		log.Error("Failed to publish integration: %s", err.Error())
 	}
 }

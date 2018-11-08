@@ -1,0 +1,67 @@
+integration,metric_name,,metric_enabled,metric_description
+memcached,getHitRateSlabPerSecond,Rate,true,Rate at which get requests were serviced by this slab class memcached,cmdSetRateSlabPerSecond,Rate,true,"Rate at which set requests stored data in this slab class"
+memcached,deleteRateSlabPerSecond,Rate,true,"Rate at which delete commands succeeded in this slab class"
+memcached,incrsModifySlabPerSecond,Rate,true,"Rate at which incrs commands modified this slab class"
+memcached,decrsModifySlabPerSecond,Rate,true,"Rate at which decrs commands modified this slab class"
+memcached,casModifiedSlabPerSecond,Rate,true,"Rate at which CAS commands modified this slab class"
+memcached,casBadValPerSecond,Rate,true,"Rate at which CAS commands failed to modify a value due to a bad CAS id"
+memcached,touchHitSlabPerSecond,Rate,true,"Rate of touches serviced by this slab class"
+memcached,usedChunksPerSecond,Rate,true,Rate at which chunks have been allocated to items
+memcached,chunkSizeInBytes,Gauge,true,The amount of space each chunk uses
+memcached,chunksPerPage,Gauge,true,How many chunks exist within one page
+memcached,totalPagesSlab,Gauge,true,Total number of pages allocated to the slab class
+memcached,totalChunksSlab,Gauge,true,Total number of chunks allocated to the slab class
+memcached,usedChunksItems,Gauge,true,How many chunks have been allocated to items
+memcached,freedChunks,Gauge,true,Chunks not yet allocated to items or freed via delete
+memcached,freeChunksEnd,Gauge,true,Number of free chunks at the end of the last allocated page
+memcached,memRequestedSlabInBytes,Gauge,true,Number of bytes requested to be stored in this slab
+memcached,activeSlabs,Gauge,true,Total number of slab classes allocated
+memcached,memAllocatedSlabsInBytes,Gauge,true,Total amount of memory allocated to slab pages
+memcached,itemsHot,Gauge,true,"Number of items presently stored in the HOT LRU"
+memcached,itemsWarm,Gauge,true,"Number of items presently stored in the WARM LRU"
+memcached,itemsCold,Gauge,true,"Number of items presently stored in the COLD LRU"
+memcached,itemsTimeSinceEvictionInMilliseconds,Gauge,true,"Seconds since the last access for the most recent item evicted from this slab class shown as milliseconds"
+memcached,itemsOldestInMilliseconds,Gauge,true,"Age of the oldest item in the LRU"
+memcached,entriesReclaimedPerSecond,Rate,true,"Rate at which entries were stored using memory from an expired entry"
+memcached,itemsFreedCrawlerPerSecond,Rate,true,"Rate at which items freed by the LRU Crawler"
+memcached,itemsRefcountLockedPerSecond,Rate,true,"Rate at which items found to be refcount locked in the LRU tail"
+memcached,itemsDirectReclaimPerSecond,Rate,true,"Rate at which worker threads had to directly pull LRU tails to find memory for a new item"
+memcached,itemsSlabClass,Gauge,true,"Number of items presently stored in this slab class"
+memcached,evictionsBeforeExpirationPerSecond,Rate,true,"Rate at which items had to be evicted from the LRU before expiring"
+memcached,evictionsBeforeExplicitExpirationPerSecond,Rate,true,"Rate at which nonzero items which had an explicit expire time set had to be evicted from the LRU before expiring"
+memcached,expiredItemsReclaimedPerSecond,Rate,true,"Rate at which expired items reclaimed from the LRU which were never touched after being set"
+memcached,validItemsEvictedPerSecond,Rate,true,"Rate at which valid items evicted from the LRU which were never touched after being set"
+memcached,outOfMemoryPerSecond,Rate,true,"Rate at which the underlying slab class was unable to store a new item shown as error"
+memcached,selfHealedSlabPerSecond,Rate,true,"Rate at which memcache self-healed a slab with a refcount leak"
+memcached,itemsColdPerSecond,Rate,true,"Rate at which items were moved from HOT or WARM into COLD"
+memcached,itemsWarmPerSecond,Rate,true,"Rate at which items were moved from COLD to WARM"
+memcached,activeItemsBumpedPerSecond,Rate,true,"Rate at which active items were bumped within HOT or WARM"
+memcached,"avgItemSizeInBytes",Gauge,true,"The average size of an item."
+memcached,"bytesUsedServerInBytes",Gauge,true,"Current number of bytes used by this server to store items."
+memcached,bytesReadServerPerSecond,Rate,true,Rate of bytes read from the network by this server
+memcached,bytesWrittenServerPerSecond,Rate,true,Rate of bytes written to the network by this server
+memcached,casWrongRatePerSecond,Rate,true,Rate at which keys are compared and swapped where the original value did not match the supplied value
+memcached,casHitRatePerSecond,Rate,true,Rate at which keys are compared and swapped and found present
+memcached,casMissRatePerSecond,Rate,true,Rate at which keys are compared and swapped and not found present
+memcached,cmdFlushRatePerSecond,Rate,true,"Rate of ""flushall"" commands"
+memcached,cmdGetRatePerSecond,Rate,true,"Rate of ""get"" commands"
+memcached,cmdSetRatePerSecond,Rate,true,"Rate of ""set"" commands"
+memcached,connectionStructuresAllocated,Gauge,true,Number of connection structures allocated by the server
+memcached,openConnectionsServer,Gauge,true,Number of open connections to this server
+memcached,currentItemsStoredServer,Gauge,true,Current number of items stored by the server
+memcached,deleteCmdRemovedPerSecond,Rate,true,Rate at which delete commands result in items being removed
+memcached,deleteCmdNoneRemovedPerSecond,Rate,true,Rate at which delete commands result in no items being removed
+memcached,evictionsPerSecond,Rate,true,Rate at which valid items are removed from cache to free memory for new items
+memcached,storingItemsPercentMemory,Gauge,true,Amount of memory being used by the server for storing items as a percentage of the max allowed
+memcached,getHitPercent,Gauge,true,Percentage of requested keys that are found present since the start of the memcache server
+memcached,getHitPerSecond,Gauge,true,Rate at which keys are requested and found present
+memcached,getMissPerSecond,Gauge,true,Rate at which keys are requested and not found
+memcached,limitBytesStorage,Gauge,true,Number of bytes this server is allowed to use for storage
+memcached,serverMaxConnectionLimitPerSecond,Rate,true,Rate at which the server has reached the max connection limit
+memcached,pointerSize,Gauge,true,"Default size of pointers on the host OS (generally 32 or 64)"
+memcached,executionTime,Gauge,true,Fraction of user time the CPU spent executing this server process
+memcached,usageRate,Rate,true,Fraction of time the CPU spent executing kernel code on behalf of this server process
+memcached,threads,Gauge,true,Number of threads used by the current Memcached server process
+memcached,connectionRateServerPerSecond,Rate,true,Rate at which connections to this server are opened
+memcached,totalItemsStored,Gauge,true,Total number of items stored by this server since it started
+memcached,uptimeInMilliseocnds,Gauge,true,Number of seconds this server has been running

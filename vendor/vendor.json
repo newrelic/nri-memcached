@@ -9,46 +9,58 @@
 			"revisionTime": "2018-02-21T22:46:20Z"
 		},
 		{
-			"checksumSHA1": "XdtijzwGRz6BNBgsd/J+d/fvN9k=",
+			"checksumSHA1": "I7hCxGuY6t4tnD/KQMxqCTqH428=",
+			"path": "github.com/memcachier/mc",
+			"revision": "5d1620e2c6d86be00ea70065e3c1301ee1cb1894",
+			"revisionTime": "2018-11-03T13:09:39Z"
+		},
+		{
+			"checksumSHA1": "J+g0oZePWp2zSIISD2dZZKTxmgg=",
+			"path": "github.com/mitchellh/mapstructure",
+			"revision": "3536a929edddb9a5b34bd6861dc4a9647cb459fe",
+			"revisionTime": "2018-10-05T04:51:35Z"
+		},
+		{
+			"checksumSHA1": "WUtPqOvTzvtf4U6AYPwHpEkr3Do=",
 			"path": "github.com/newrelic/infra-integrations-sdk/args",
-			"revision": "05f41fe052b3dc8861a75b3bd8b4cef90dcb5dc4",
-			"revisionTime": "2018-07-12T13:06:44Z"
+			"revision": "dfb3835de5836e1942bbd92eb24e09866a83e1ac",
+			"revisionTime": "2018-10-25T09:43:33Z"
 		},
 		{
 			"checksumSHA1": "KaZLSd/JUZz/mqfW3jFd1j2QdWA=",
 			"path": "github.com/newrelic/infra-integrations-sdk/data/event",
-			"revision": "05f41fe052b3dc8861a75b3bd8b4cef90dcb5dc4",
-			"revisionTime": "2018-07-12T13:06:44Z"
+			"revision": "dfb3835de5836e1942bbd92eb24e09866a83e1ac",
+			"revisionTime": "2018-10-25T09:43:33Z"
 		},
 		{
 			"checksumSHA1": "EOoxXGqFDPkCvj7wec2S5kCXY2I=",
 			"path": "github.com/newrelic/infra-integrations-sdk/data/inventory",
-			"revision": "05f41fe052b3dc8861a75b3bd8b4cef90dcb5dc4",
-			"revisionTime": "2018-07-12T13:06:44Z"
+			"revision": "dfb3835de5836e1942bbd92eb24e09866a83e1ac",
+			"revisionTime": "2018-10-25T09:43:33Z"
 		},
 		{
-			"checksumSHA1": "LQaT+AsGHHGm8eJTRw5XAcH+8VI=",
+			"checksumSHA1": "39SDqHpLpE9J1nrIwYI+8ukzXJs=",
 			"path": "github.com/newrelic/infra-integrations-sdk/data/metric",
-			"revision": "05f41fe052b3dc8861a75b3bd8b4cef90dcb5dc4",
-			"revisionTime": "2018-07-12T13:06:44Z"
+			"revision": "dfb3835de5836e1942bbd92eb24e09866a83e1ac",
+			"revisionTime": "2018-10-25T09:43:33Z"
 		},
 		{
-			"checksumSHA1": "iYqZm+K1690zh7ihc+yDbKftd9g=",
+			"checksumSHA1": "SmqfH71xpQsY3JjNHUNUVCq7pCA=",
 			"path": "github.com/newrelic/infra-integrations-sdk/integration",
-			"revision": "05f41fe052b3dc8861a75b3bd8b4cef90dcb5dc4",
-			"revisionTime": "2018-07-12T13:06:44Z"
+			"revision": "dfb3835de5836e1942bbd92eb24e09866a83e1ac",
+			"revisionTime": "2018-10-25T09:43:33Z"
 		},
 		{
 			"checksumSHA1": "6/DhD+/LhC/k3NaLgkpd6iE8b5E=",
 			"path": "github.com/newrelic/infra-integrations-sdk/log",
-			"revision": "05f41fe052b3dc8861a75b3bd8b4cef90dcb5dc4",
-			"revisionTime": "2018-07-12T13:06:44Z"
+			"revision": "dfb3835de5836e1942bbd92eb24e09866a83e1ac",
+			"revisionTime": "2018-10-25T09:43:33Z"
 		},
 		{
-			"checksumSHA1": "Bmaab3vN4SGpT+/8L7Ouj365z6o=",
+			"checksumSHA1": "BsHp62Etporko0d+4GpVxrP2qtw=",
 			"path": "github.com/newrelic/infra-integrations-sdk/persist",
-			"revision": "05f41fe052b3dc8861a75b3bd8b4cef90dcb5dc4",
-			"revisionTime": "2018-07-12T13:06:44Z"
+			"revision": "dfb3835de5836e1942bbd92eb24e09866a83e1ac",
+			"revisionTime": "2018-10-25T09:43:33Z"
 		},
 		{
 			"checksumSHA1": "ljd3FhYRJ91cLZz3wsH9BQQ2JbA=",
@@ -69,5 +81,5 @@
 			"revisionTime": "2018-06-26T19:55:58Z"
 		}
 	],
-	"rootPath": "github.com/newrelic/memcached"
+	"rootPath": "github.com/newrelic/nri-memcached"
 }
