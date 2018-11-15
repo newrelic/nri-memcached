@@ -159,7 +159,7 @@ func processItemStats(stats map[string]string, i *integration.Integration, host 
 			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
 			metric.Attribute{Key: "slabID", Value: e.Metadata.Name},
 			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
-      metric.Attribute{Key: "host", Value: host},
+			metric.Attribute{Key: "host", Value: host},
 		)
 		err = ms.MarshalMetrics(s)
 		if err != nil {
@@ -222,7 +222,7 @@ func processSlabStats(stats map[string]string, i *integration.Integration, host 
 			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
 			metric.Attribute{Key: "slabID", Value: e.Metadata.Name},
 			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
-      metric.Attribute{Key: "host", Value: host},
+			metric.Attribute{Key: "host", Value: host},
 		)
 		err = ms.MarshalMetrics(s)
 		if err != nil {
