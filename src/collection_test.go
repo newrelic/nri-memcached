@@ -39,7 +39,7 @@ func Test_processGeneralStats(t *testing.T) {
 	i, _ := integration.New("test", "test")
 	e, _ := i.Entity("test", "test")
 
-	processGeneralStats(stats, e)
+	processGeneralStats(stats, e, "testhost")
 
 	assert.Equal(t, 1, len(e.Metrics))
 	assert.Equal(t, float64(999), e.Metrics[0].Metrics["bytesUsedServerInBytes"])
@@ -57,7 +57,7 @@ func Test_processItemStats(t *testing.T) {
 
 	i, _ := integration.New("test", "test")
 
-	processItemStats(stats, i)
+	processItemStats(stats, i, "testhost")
 	e1, _ := i.Entity("1", "slab")
 	e2, _ := i.Entity("2", "slab")
 
