@@ -26,7 +26,7 @@ func CollectGeneralStats(client Client, i *integration.Integration) {
 			log.Error("Failed to retrieve entity for instance %s: %s", host, err.Error())
 		}
 
-		processGeneralStats(hostStats, e)
+		processGeneralStats(hostStats, e, host)
 	}
 }
 
@@ -39,8 +39,8 @@ func CollectSlabStats(client Client, i *integration.Integration) {
 	}
 
 	// We will only get one host back
-	for server, serverStats := range slabStats {
-		processSlabStats(serverStats, i, server)
+	for host, serverStats := range slabStats {
+		processSlabStats(serverStats, i, host)
 	}
 }
 
@@ -52,8 +52,8 @@ func CollectItemStats(client Client, i *integration.Integration) {
 		return
 	}
 	// Usually only one
-	for _, serverStats := range itemStats {
-		processItemStats(serverStats, i)
+	for host, serverStats := range itemStats {
+		processItemStats(serverStats, i, host)
 	}
 }
 
@@ -71,7 +71,7 @@ func CollectSettings(client Client, i *integration.Integration) {
 	}
 }
 
-func processGeneralStats(stats map[string]string, e *integration.Entity) {
+func processGeneralStats(stats map[string]string, e *integration.Entity, host string) {
 	var s GeneralStats
 	config := mapstructure.DecoderConfig{
 		WeaklyTypedInput: true,
@@ -94,6 +94,7 @@ func processGeneralStats(stats map[string]string, e *integration.Entity) {
 	ms := e.NewMetricSet("MemcachedSample",
 		metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
 		metric.Attribute{Key: "entityName", Value: "instance:" + e.Metadata.Name},
+		metric.Attribute{Key: "host", Value: host},
 	)
 
 	err = ms.MarshalMetrics(s)
@@ -133,7 +134,7 @@ func calculateProcessedMetrics(s *GeneralStats) {
 	}
 }
 
-func processItemStats(stats map[string]string, i *integration.Integration) {
+func processItemStats(stats map[string]string, i *integration.Integration, host string) {
 	slabs := partitionItemsBySlabID(stats)
 	for slabID, slabMetrics := range slabs {
 		var s ItemStats
@@ -158,6 +159,7 @@ func processItemStats(stats map[string]string, i *integration.Integration) {
 			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
 			metric.Attribute{Key: "slabID", Value: e.Metadata.Name},
 			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
+      metric.Attribute{Key: "host", Value: host},
 		)
 		err = ms.MarshalMetrics(s)
 		if err != nil {
@@ -220,6 +222,7 @@ func processSlabStats(stats map[string]string, i *integration.Integration, host 
 			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
 			metric.Attribute{Key: "slabID", Value: e.Metadata.Name},
 			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
+      metric.Attribute{Key: "host", Value: host},
 		)
 		err = ms.MarshalMetrics(s)
 		if err != nil {
@@ -250,6 +253,7 @@ func processClusterSlabStats(stats map[string]string, i *integration.Integration
 	ms := instanceEntity.NewMetricSet("MemcachedSample",
 		metric.Attribute{Key: "displayName", Value: instanceEntity.Metadata.Name},
 		metric.Attribute{Key: "entityName", Value: "instance:" + instanceEntity.Metadata.Name},
+		metric.Attribute{Key: "host", Value: host},
 	)
 
 	err = ms.MarshalMetrics(c)
