@@ -7,6 +7,7 @@ commands:
   all_data:
     command:
       - ./bin/nr-memcached
+    prefix: config/memcached
     interval: 15
   metrics:
     command:
