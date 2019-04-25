@@ -153,11 +153,10 @@ func processItemStats(stats map[string]string, i *integration.Integration, host 
 			log.Error("Failed to decode map: %s", err.Error())
 		}
 
-    slabIDAttr := integration.NewIDAttribute("slab", slabID)
+    slabIDAttr := integration.NewIDAttribute("mc-slab", slabID)
 		e, _ := i.EntityReportedVia(host, host, "mc-slab", slabIDAttr)
 		ms := e.NewMetricSet("MemcachedSlabSample",
 			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
-			metric.Attribute{Key: "slabID", Value: e.Metadata.Name},
 			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
 			metric.Attribute{Key: "host", Value: host},
 		)
@@ -217,11 +216,10 @@ func processSlabStats(stats map[string]string, i *integration.Integration, host 
 			log.Error("Failed to decode map: %s", err.Error())
 		}
 
-    slabIDAttr := integration.NewIDAttribute("slab", slabID)
+    slabIDAttr := integration.NewIDAttribute("mc-slab", slabID)
 		e, _ := i.EntityReportedVia(host, host, "mc-slab", slabIDAttr)
 		ms := e.NewMetricSet("MemcachedSlabSample",
 			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
-			metric.Attribute{Key: "slabID", Value: e.Metadata.Name},
 			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
 			metric.Attribute{Key: "host", Value: host},
 		)
