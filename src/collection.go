@@ -21,12 +21,12 @@ func CollectGeneralStats(client Client, i *integration.Integration) {
 
 	// We will only get one host back
 	for host, hostStats := range generalStats {
-		e, err := i.Entity(host, "instance")
+		e, err := i.EntityReportedVia(host, host, "mc-instance")
 		if err != nil {
 			log.Error("Failed to retrieve entity for instance %s: %s", host, err.Error())
 		}
 
-		processGeneralStats(hostStats, e, host)
+		processGeneralStats(hostStats, e)
 	}
 }
 
@@ -71,7 +71,7 @@ func CollectSettings(client Client, i *integration.Integration) {
 	}
 }
 
-func processGeneralStats(stats map[string]string, e *integration.Entity, host string) {
+func processGeneralStats(stats map[string]string, e *integration.Entity) {
 	var s GeneralStats
 	config := mapstructure.DecoderConfig{
 		WeaklyTypedInput: true,
@@ -94,7 +94,6 @@ func processGeneralStats(stats map[string]string, e *integration.Entity, host st
 	ms := e.NewMetricSet("MemcachedSample",
 		metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
 		metric.Attribute{Key: "entityName", Value: "instance:" + e.Metadata.Name},
-		metric.Attribute{Key: "host", Value: host},
 	)
 
 	err = ms.MarshalMetrics(s)
@@ -154,10 +153,10 @@ func processItemStats(stats map[string]string, i *integration.Integration, host 
 			log.Error("Failed to decode map: %s", err.Error())
 		}
 
-		e, _ := i.Entity(slabID, "slab")
+		slabIDAttr := integration.NewIDAttribute("mc-slab", slabID)
+		e, _ := i.EntityReportedVia(host, host, "mc-slab", slabIDAttr)
 		ms := e.NewMetricSet("MemcachedSlabSample",
 			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
-			metric.Attribute{Key: "slabID", Value: e.Metadata.Name},
 			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
 			metric.Attribute{Key: "host", Value: host},
 		)
@@ -217,10 +216,10 @@ func processSlabStats(stats map[string]string, i *integration.Integration, host 
 			log.Error("Failed to decode map: %s", err.Error())
 		}
 
-		e, _ := i.Entity(slabID, "slab")
+		slabIDAttr := integration.NewIDAttribute("mc-slab", slabID)
+		e, _ := i.EntityReportedVia(host, host, "mc-slab", slabIDAttr)
 		ms := e.NewMetricSet("MemcachedSlabSample",
 			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
-			metric.Attribute{Key: "slabID", Value: e.Metadata.Name},
 			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
 			metric.Attribute{Key: "host", Value: host},
 		)
@@ -249,7 +248,7 @@ func processClusterSlabStats(stats map[string]string, i *integration.Integration
 		log.Error("Failed to decode map: %s", err.Error())
 	}
 
-	instanceEntity, _ := i.Entity(host, "instance")
+	instanceEntity, _ := i.EntityReportedVia(host, host, "mc-instance")
 	ms := instanceEntity.NewMetricSet("MemcachedSample",
 		metric.Attribute{Key: "displayName", Value: instanceEntity.Metadata.Name},
 		metric.Attribute{Key: "entityName", Value: "instance:" + instanceEntity.Metadata.Name},
@@ -299,7 +298,7 @@ func partitionSlabsBySlabID(slabs map[string]string) (map[string]map[string]stri
 }
 
 func processSettings(settings map[string]string, i *integration.Integration, host string) {
-	e, err := i.Entity(host, "instance")
+	e, err := i.EntityReportedVia(host, host, "mc-instance")
 	if err != nil {
 		log.Error("Failed to get entity for host %s: %s", host, err.Error())
 		return

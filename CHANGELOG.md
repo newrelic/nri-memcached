@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.0 - 2018-05-06
+### Changed
+- Update SDK
+- Make entity keys more unique
+ 
 ## 1.0.1 - 2018-02-25
 ### Fixed
 - Added prefix for all_data
