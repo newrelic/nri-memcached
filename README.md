@@ -2,6 +2,8 @@
 
 Reports status and metrics for Memcached service
 
+See our [documentation web site](https://docs.newrelic.com/docs/integrations/host-integrations/host-integrations-list/memcached-monitoring-integration) for more details.
+
 ## Requirements
 
 None
