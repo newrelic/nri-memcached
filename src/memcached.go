@@ -1,3 +1,4 @@
+//go:generate goversioninfo
 package main
 
 import (
@@ -11,7 +12,7 @@ import (
 
 const (
 	integrationName    = "com.newrelic.memcached"
-	integrationVersion = "2.0.0"
+	integrationVersion = "2.0.1"
 )
 
 var (

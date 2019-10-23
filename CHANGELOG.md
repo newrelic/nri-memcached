@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Created Dockerfile for sidecar image
 
+## 2.0.1 - 2018-10-23
+### Added
+- Add windows install packaging
+
 ## 2.0.0 - 2018-05-06
 ### Changed
 - Update SDK
