@@ -6,17 +6,17 @@ os: windows
 commands:
   all_data:
     command:
-      - .\bin\nr-memcached.exe
+      - .\bin\nri-memcached.exe
     prefix: config/memcached
     interval: 15
   metrics:
     command:
-      - .\bin\nr-memcached.exe
+      - .\bin\nri-memcached.exe
       - --metrics
     interval: 15
   inventory:
     command:
-      - .\bin\nr-memcached.exe
+      - .\bin\nri-memcached.exe
       - --inventory
     prefix: config/memcached
     interval: 15

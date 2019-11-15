@@ -12,7 +12,7 @@ None
 
 * Download an archive file for the `Memcached` Integration
 * Extract `memcached-definition.yml` and the `bin` directory into `/var/db/newrelic-infra/newrelic-integrations`
-* Add execute permissions for the binary file `nr-memcached` (if required)
+* Add execute permissions for the binary file `nri-memcached` (if required)
 * Extract `memcached-config.yml.sample` into `/etc/newrelic-infra/integrations.d`
 
 ## Usage
@@ -38,9 +38,9 @@ Assuming you have the source code, you can build and run the Memcached integrati
 $ make
 ```
 
-* The command above will execute tests for the Memcached integration and build an executable file called `nr-memcached` in the `bin` directory
+* The command above will execute tests for the Memcached integration and build an executable file called `nri-memcached` in the `bin` directory
 ```
-$ ./bin/nr-memcached --help
+$ ./bin/nri-memcached --help
 ```
 
 For managing external dependencies, the [govendor tool](https://github.com/kardianos/govendor) is used. It is required to lock all external dependencies to a specific version (if possible) in the vendor directory.
