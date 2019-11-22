@@ -6,17 +6,17 @@ os: linux
 commands:
   all_data:
     command:
-      - ./bin/nr-memcached
+      - ./bin/nri-memcached
     prefix: config/memcached
     interval: 15
   metrics:
     command:
-      - ./bin/nr-memcached
+      - ./bin/nri-memcached
       - --metrics
     interval: 15
   inventory:
     command:
-      - ./bin/nr-memcached
+      - ./bin/nri-memcached
       - --inventory
     prefix: config/memcached
     interval: 15

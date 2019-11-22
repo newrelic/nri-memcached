@@ -5,9 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Next
-
-- Created Dockerfile for sidecar image
+## 2.1.0 (2019-11-18)
+### Changed
+- Renamed the integration executable from nr-memcached to nri-memcached in order to be consistent with the package naming. **Important Note:** if you have any security module rules (eg. SELinux), alerts or automation that depends on the name of this binary, these will have to be updated.
 
 ## 2.0.1 - 2018-10-23
 ### Added
