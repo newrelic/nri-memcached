@@ -1,0 +1,28 @@
+  memcached-config.yml: |
+    ---
+    # Run auto discovery to find pods with label "app=memcached"
+    # https://docs.newrelic.com/docs/integrations/host-integrations/installation/container-auto-discovery
+    discovery:
+      command:
+        # Run NRI Discovery for Kubernetes
+        # https://github.com/newrelic/nri-discovery-kubernetes
+        exec: /var/db/newrelic-infra/nri-discovery-kubernetes
+        match:
+          label.app: memcached
+    integrations:
+      - name: nri-memcached
+        env:
+          # Hostname of the memcached instance.
+          # Defaults to localhost.
+          HOST: ${discovery.ip}
+          # Port memcached is running on.
+          # Defaults to 11211
+          port: 11211
+          # Memcached SASL username. Only required if
+          # authentication is enabled.
+          username: cacheuser
+          # Memcached SASL password. Only required if
+          # authentication is enabled.
+          password: password
+        labels:
+          env: production
