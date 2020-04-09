@@ -6,7 +6,7 @@ type GeneralStats struct {
 	CurrItems              *int     `mapstructure:"curr_items"            metric_name:"currentItemsStoredServer"          source_type:"gauge"`
 	TotalItems             *int     `mapstructure:"total_items"           metric_name:"itemsStoredPerSecond"              source_type:"rate"`
 	AverageItemSize        *float64 `                                     metric_name:"avgItemSizeInBytes"                source_type:"gauge"`
-	LimitMaxbytes          *int     `mapstructure:"limit_maxbytes"        metric_name:"limitBytesStorage"                 source_type:"rate"`
+	LimitMaxbytes          *int     `mapstructure:"limit_maxbytes"        metric_name:"limitBytesStorage"                 source_type:"gauge"`
 	PercentMaxUsed         *float64 `                                     metric_name:"storingItemsPercentMemory"         source_type:"gauge"`
 	BytesRead              *int     `mapstructure:"bytes_read"            metric_name:"bytesReadServerPerSecond"          source_type:"rate"`
 	BytesWritten           *int     `mapstructure:"bytes_written"         metric_name:"bytesWrittenServerPerSecond"       source_type:"rate"`
