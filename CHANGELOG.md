@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.1.1 (2020-07-15)
+### Fixed
+- Issue with calculating deltas for slabs because of entity uniqueness
+
 ## 2.1.0 (2019-11-18)
 ### Changed
 - Renamed the integration executable from nr-memcached to nri-memcached in order to be consistent with the package naming. **Important Note:** if you have any security module rules (eg. SELinux), alerts or automation that depends on the name of this binary, these will have to be updated.
@@ -17,7 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Update SDK
 - Make entity keys more unique
- 
+
 ## 1.0.1 - 2018-02-25
 ### Fixed
 - Added prefix for all_data
