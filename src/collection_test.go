@@ -59,8 +59,8 @@ func Test_processItemStats(t *testing.T) {
 
 	processItemStats(stats, i, "testhost")
 
-	e1, _ := i.Entity("testhost", "mc-slab", integration.NewIDAttribute("mc-slab", "1"))
-	e2, _ := i.Entity("testhost", "mc-slab", integration.NewIDAttribute("mc-slab", "2"))
+	e1, _ := i.Entity("1", "mc-slab", integration.NewIDAttribute("mc-slab", "1"), integration.NewIDAttribute("host", "testhost"))
+	e2, _ := i.Entity("2", "mc-slab", integration.NewIDAttribute("mc-slab", "2"), integration.NewIDAttribute("host", "testhost"))
 
 	assert.Equal(t, 1, len(e1.Metrics))
 	assert.Equal(t, 1, len(e2.Metrics))
@@ -78,7 +78,8 @@ func Test_processSlabStats(t *testing.T) {
 	i, _ := integration.New("test", "test")
 
 	id1 := integration.NewIDAttribute("mc-slab", "1")
-	e1, _ := i.Entity("testHost", "mc-slab", id1)
+	id2 := integration.NewIDAttribute("host", "testhost")
+	e1, _ := i.Entity("1", "mc-slab", id1, id2)
 
 	e2, _ := i.Entity("testHost", "mc-instance")
 
@@ -150,7 +151,8 @@ func Test_CollectSlabStats(t *testing.T) {
 
 	i, _ := integration.New("test", "test")
 	idattr := integration.NewIDAttribute("mc-slab", "1")
-	e1, _ := i.Entity("testHost", "mc-slab", idattr)
+	id2 := integration.NewIDAttribute("host", "testHost")
+	e1, _ := i.Entity("1", "mc-slab", idattr, id2)
 
 	CollectSlabStats(client, i)
 
@@ -174,9 +176,10 @@ func Test_CollectItemStats(t *testing.T) {
 	CollectItemStats(client, i)
 
 	id1 := integration.NewIDAttribute("mc-slab", "1")
-	e1, _ := i.Entity("testHost", "mc-slab", id1)
+	idHost := integration.NewIDAttribute("host", "testHost")
+	e1, _ := i.Entity("1", "mc-slab", id1, idHost)
 	id2 := integration.NewIDAttribute("mc-slab", "2")
-	e2, _ := i.Entity("testHost", "mc-slab", id2)
+	e2, _ := i.Entity("2", "mc-slab", id2, idHost)
 
 	assert.Equal(t, 1, len(e1.Metrics))
 	assert.Equal(t, 1, len(e2.Metrics))

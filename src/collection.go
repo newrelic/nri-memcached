@@ -154,7 +154,8 @@ func processItemStats(stats map[string]string, i *integration.Integration, host 
 		}
 
 		slabIDAttr := integration.NewIDAttribute("mc-slab", slabID)
-		e, _ := i.EntityReportedVia(host, host, "mc-slab", slabIDAttr)
+		hostIDAttr := integration.NewIDAttribute("host", host)
+		e, _ := i.EntityReportedVia(host, slabID, "mc-slab", slabIDAttr, hostIDAttr)
 		ms := e.NewMetricSet("MemcachedSlabSample",
 			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
 			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
@@ -217,7 +218,8 @@ func processSlabStats(stats map[string]string, i *integration.Integration, host 
 		}
 
 		slabIDAttr := integration.NewIDAttribute("mc-slab", slabID)
-		e, _ := i.EntityReportedVia(host, host, "mc-slab", slabIDAttr)
+		hostIDAttr := integration.NewIDAttribute("host", host)
+		e, _ := i.EntityReportedVia(host, slabID, "mc-slab", slabIDAttr, hostIDAttr)
 		ms := e.NewMetricSet("MemcachedSlabSample",
 			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
 			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
