@@ -12,7 +12,7 @@ import (
 
 const (
 	integrationName    = "com.newrelic.memcached"
-	integrationVersion = "2.1.1"
+	integrationVersion = "2.1.2"
 )
 
 var (
