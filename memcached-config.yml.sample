@@ -1,3 +1,4 @@
+
 integration_name: com.newrelic.memcached
 
 instances:
@@ -11,9 +12,9 @@ instances:
       # Port memcached is running on.
       # Defaults to 11211
       port: 11211
-      # Memcached SASL username. Only required if 
+      # Memcached SASL username. Only required if
       # authentication is enabled.
       username: cacheuser
-      # Memcached SASL password. Only required if 
+      # Memcached SASL password. Only required if
       # authentication is enabled.
       password: password
