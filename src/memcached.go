@@ -3,6 +3,9 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"runtime"
+	"strings"
 
 	"github.com/memcachier/mc"
 	sdkArgs "github.com/newrelic/infra-integrations-sdk/args"
@@ -11,27 +14,42 @@ import (
 )
 
 const (
-	integrationName    = "com.newrelic.memcached"
-	integrationVersion = "2.1.2"
-)
-
-var (
-	args argumentList
+	integrationName = "com.newrelic.memcached"
 )
 
 type argumentList struct {
 	sdkArgs.DefaultArgumentList
-	Host     string `default:"localhost" help:"The memcached host."`
-	Port     string `default:"11211"     help:"The memcached port."`
-	Username string `default:""          help:"The memcached SASL username."`
-	Password string `default:""          help:"The memcached SASL password."`
+	Host        string `default:"localhost" help:"The memcached host."`
+	Port        string `default:"11211"     help:"The memcached port."`
+	Username    string `default:""          help:"The memcached SASL username."`
+	Password    string `default:""          help:"The memcached SASL password."`
+	ShowVersion bool   `default:"false" help:"Print build information and exit"`
 }
+
+var (
+	args               argumentList
+	integrationVersion = "0.0.0"
+	gitCommit          = ""
+	buildDate          = ""
+)
 
 func main() {
 	memcachedIntegration, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
 	if err != nil {
 		log.Error("Failed to create integration: %s", err)
 		return
+	}
+
+	if args.ShowVersion {
+		fmt.Printf(
+			"New Relic %s integration Version: %s, Platform: %s, GoVersion: %s, GitCommit: %s, BuildDate: %s\n",
+			strings.Title(strings.Replace(integrationName, "com.newrelic.", "", 1)),
+			integrationVersion,
+			fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH),
+			runtime.Version(),
+			gitCommit,
+			buildDate)
+		os.Exit(0)
 	}
 
 	log.SetupLogging(args.Verbose)
