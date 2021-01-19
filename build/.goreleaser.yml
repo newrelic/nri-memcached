@@ -45,13 +45,18 @@ nfpms:
     formats:
       - deb
     bindir: "/var/db/newrelic-infra/newrelic-integrations/bin"
-    files:
-      "memcached-config.yml.sample": "/etc/newrelic-infra/integrations.d/memcached-config.yml.sample"
-      "CHANGELOG.md": "/usr/share/doc/nri-memcached/CHANGELOG.md"
-      "README.md":  "/usr/share/doc/nri-memcached/README.md"
-      "LICENSE": "/usr/share/doc/nri-memcached/LICENSE"
-    config_files:
-      "memcached-definition.yml": "/var/db/newrelic-infra/newrelic-integrations/memcached-definition.yml"
+    contents:
+      - src: memcached-config.yml.sample
+        dst: /etc/newrelic-infra/integrations.d/memcached-config.yml.sample
+      - src: CHANGELOG.md
+        dst: /usr/share/doc/nri-memcached/CHANGELOG.md
+      - src: README.md
+        dst: /usr/share/doc/nri-memcached/README.md
+      - src: LICENSE
+        dst: /usr/share/doc/nri-memcached/LICENSE
+      - src: memcached-definition.yml
+        dst: /var/db/newrelic-infra/newrelic-integrations/memcached-definition.yml
+        type: config
     dependencies:
       - "newrelic-infra"
 
@@ -68,13 +73,18 @@ nfpms:
     formats:
       - rpm
     bindir: "/var/db/newrelic-infra/newrelic-integrations/bin"
-    files:
-      "memcached-config.yml.sample": "/etc/newrelic-infra/integrations.d/memcached-config.yml.sample"
-      "CHANGELOG.md": "/usr/share/doc/nri-memcached/CHANGELOG.md"
-      "README.md":  "/usr/share/doc/nri-memcached/README.md"
-      "LICENSE": "/usr/share/doc/nri-memcached/LICENSE"
-    config_files:
-      "memcached-definition.yml": "/var/db/newrelic-infra/newrelic-integrations/memcached-definition.yml"
+    contents:
+      - src: memcached-config.yml.sample
+        dst: /etc/newrelic-infra/integrations.d/memcached-config.yml.sample
+      - src: CHANGELOG.md
+        dst: /usr/share/doc/nri-memcached/CHANGELOG.md
+      - src: README.md
+        dst: /usr/share/doc/nri-memcached/README.md
+      - src: LICENSE
+        dst: /usr/share/doc/nri-memcached/LICENSE
+      - src: memcached-definition.yml
+        dst: /var/db/newrelic-infra/newrelic-integrations/memcached-definition.yml
+        type: config
     dependencies:
       - "newrelic-infra"
     overrides:
