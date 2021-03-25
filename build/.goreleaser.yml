@@ -107,7 +107,7 @@ archives:
       - nri-win
     name_template: "{{ .ProjectName }}-{{ .Arch }}.{{ .Version }}_dirty"
     files:
-      - memcached-win-config.yml.sample
+      - memcached-config.yml.sample
       - memcached-win-definition.yml
     format: zip
 
