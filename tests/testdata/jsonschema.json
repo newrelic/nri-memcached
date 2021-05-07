@@ -32,7 +32,8 @@
                     "type": "string"
                   },
                   "id_attributes": {
-                    "type": "null"
+                    "type": "array",
+                    "items": {}
                   }
                 },
                 "required": [
