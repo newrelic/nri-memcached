@@ -4,7 +4,7 @@ import (
 	"regexp"
 
 	"github.com/mitchellh/mapstructure"
-	"github.com/newrelic/infra-integrations-sdk/data/metric"
+	"github.com/newrelic/infra-integrations-sdk/data/attribute"
 	"github.com/newrelic/infra-integrations-sdk/integration"
 	"github.com/newrelic/infra-integrations-sdk/log"
 )
@@ -92,8 +92,8 @@ func processGeneralStats(stats map[string]string, e *integration.Entity) {
 
 	// Create metric set
 	ms := e.NewMetricSet("MemcachedSample",
-		metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
-		metric.Attribute{Key: "entityName", Value: "instance:" + e.Metadata.Name},
+		attribute.Attribute{Key: "displayName", Value: e.Metadata.Name},
+		attribute.Attribute{Key: "entityName", Value: "instance:" + e.Metadata.Name},
 	)
 
 	err = ms.MarshalMetrics(s)
@@ -157,9 +157,9 @@ func processItemStats(stats map[string]string, i *integration.Integration, host 
 		hostIDAttr := integration.NewIDAttribute("host", host)
 		e, _ := i.EntityReportedVia(host, slabID, "mc-slab", slabIDAttr, hostIDAttr)
 		ms := e.NewMetricSet("MemcachedSlabSample",
-			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
-			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
-			metric.Attribute{Key: "host", Value: host},
+			attribute.Attribute{Key: "displayName", Value: e.Metadata.Name},
+			attribute.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
+			attribute.Attribute{Key: "host", Value: host},
 		)
 		err = ms.MarshalMetrics(s)
 		if err != nil {
@@ -221,9 +221,9 @@ func processSlabStats(stats map[string]string, i *integration.Integration, host 
 		hostIDAttr := integration.NewIDAttribute("host", host)
 		e, _ := i.EntityReportedVia(host, slabID, "mc-slab", slabIDAttr, hostIDAttr)
 		ms := e.NewMetricSet("MemcachedSlabSample",
-			metric.Attribute{Key: "displayName", Value: e.Metadata.Name},
-			metric.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
-			metric.Attribute{Key: "host", Value: host},
+			attribute.Attribute{Key: "displayName", Value: e.Metadata.Name},
+			attribute.Attribute{Key: "entityName", Value: "slab:" + e.Metadata.Name},
+			attribute.Attribute{Key: "host", Value: host},
 		)
 		err = ms.MarshalMetrics(s)
 		if err != nil {
@@ -252,9 +252,9 @@ func processClusterSlabStats(stats map[string]string, i *integration.Integration
 
 	instanceEntity, _ := i.EntityReportedVia(host, host, "mc-instance")
 	ms := instanceEntity.NewMetricSet("MemcachedSample",
-		metric.Attribute{Key: "displayName", Value: instanceEntity.Metadata.Name},
-		metric.Attribute{Key: "entityName", Value: "instance:" + instanceEntity.Metadata.Name},
-		metric.Attribute{Key: "host", Value: host},
+		attribute.Attribute{Key: "displayName", Value: instanceEntity.Metadata.Name},
+		attribute.Attribute{Key: "entityName", Value: "instance:" + instanceEntity.Metadata.Name},
+		attribute.Attribute{Key: "host", Value: host},
 	)
 
 	err = ms.MarshalMetrics(c)

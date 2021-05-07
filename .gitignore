@@ -41,7 +41,7 @@ debug
 
 bin/
 dist/
-
+vendor/
 # Local development tools/files
 .idea
 .env

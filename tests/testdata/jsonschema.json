@@ -1,0 +1,1108 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^com.newrelic.memcached$"
+        },
+        "protocol_version": {
+          "minLength": 1,
+          "pattern": "^3$",
+          "type": "string"
+        },
+        "integration_version": {
+          "minLength": 1,
+          "pattern": "^[0-9]+.[0-9]+.[0-9]+$",
+          "type": "string"
+        },
+      "data": {
+        "type": "array",
+        "items": [
+          {
+            "type": "object",
+            "properties": {
+              "entity": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "id_attributes": {
+                    "type": "array",
+                    "items": {}
+                  }
+                },
+                "required": [
+                  "name",
+                  "type",
+                  "id_attributes"
+                ]
+              },
+              "metrics": {
+                "type": "array",
+                "items": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "bytesReadServerPerSecond": {
+                        "type": "integer"
+                      },
+                      "bytesUsedServerInBytes": {
+                        "type": "integer"
+                      },
+                      "bytesWrittenServerPerSecond": {
+                        "type": "integer"
+                      },
+                      "casHitRatePerSecond": {
+                        "type": "integer"
+                      },
+                      "casMissRatePerSecond": {
+                        "type": "integer"
+                      },
+                      "casWrongRatePerSecond": {
+                        "type": "integer"
+                      },
+                      "cmdFlushRatePerSecond": {
+                        "type": "integer"
+                      },
+                      "cmdGetRatePerSecond": {
+                        "type": "integer"
+                      },
+                      "cmdSetRatePerSecond": {
+                        "type": "integer"
+                      },
+                      "connectionRateServerPerSecond": {
+                        "type": "integer"
+                      },
+                      "connectionStructuresAllocated": {
+                        "type": "integer"
+                      },
+                      "currentItemsStoredServer": {
+                        "type": "integer"
+                      },
+                      "deleteCmdNoneRemovedPerSecond": {
+                        "type": "integer"
+                      },
+                      "deleteCmdRemovedPerSecond": {
+                        "type": "integer"
+                      },
+                      "displayName": {
+                        "type": "string"
+                      },
+                      "entityName": {
+                        "type": "string"
+                      },
+                      "event_type": {
+                        "type": "string"
+                      },
+                      "evictionsPerSecond": {
+                        "type": "integer"
+                      },
+                      "executionTime": {
+                        "type": "integer"
+                      },
+                      "getHitPerSecond": {
+                        "type": "integer"
+                      },
+                      "getMissPerSecond": {
+                        "type": "integer"
+                      },
+                      "itemsStoredPerSecond": {
+                        "type": "integer"
+                      },
+                      "limitBytesStorage": {
+                        "type": "integer"
+                      },
+                      "openConnectionsServer": {
+                        "type": "integer"
+                      },
+                      "pointerSize": {
+                        "type": "integer"
+                      },
+                      "reportingEndpoint": {
+                        "type": "string"
+                      },
+                      "serverMaxConnectionLimitPerSecond": {
+                        "type": "integer"
+                      },
+                      "storingItemsPercentMemory": {
+                        "type": "integer"
+                      },
+                      "threads": {
+                        "type": "integer"
+                      },
+                      "uptimeInMilliseconds": {
+                        "type": "integer"
+                      },
+                      "usageRate": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "bytesReadServerPerSecond",
+                      "bytesUsedServerInBytes",
+                      "bytesWrittenServerPerSecond",
+                      "casHitRatePerSecond",
+                      "casMissRatePerSecond",
+                      "casWrongRatePerSecond",
+                      "cmdFlushRatePerSecond",
+                      "cmdGetRatePerSecond",
+                      "cmdSetRatePerSecond",
+                      "connectionRateServerPerSecond",
+                      "connectionStructuresAllocated",
+                      "currentItemsStoredServer",
+                      "deleteCmdNoneRemovedPerSecond",
+                      "deleteCmdRemovedPerSecond",
+                      "displayName",
+                      "entityName",
+                      "event_type",
+                      "evictionsPerSecond",
+                      "executionTime",
+                      "getHitPerSecond",
+                      "getMissPerSecond",
+                      "itemsStoredPerSecond",
+                      "limitBytesStorage",
+                      "openConnectionsServer",
+                      "pointerSize",
+                      "reportingEndpoint",
+                      "serverMaxConnectionLimitPerSecond",
+                      "storingItemsPercentMemory",
+                      "threads",
+                      "uptimeInMilliseconds",
+                      "usageRate"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "activeSlabs": {
+                        "type": "integer"
+                      },
+                      "displayName": {
+                        "type": "string"
+                      },
+                      "entityName": {
+                        "type": "string"
+                      },
+                      "event_type": {
+                        "type": "string"
+                      },
+                      "host": {
+                        "type": "string"
+                      },
+                      "memAllocatedSlabsInBytes": {
+                        "type": "integer"
+                      },
+                      "reportingEndpoint": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "activeSlabs",
+                      "displayName",
+                      "entityName",
+                      "event_type",
+                      "host",
+                      "memAllocatedSlabsInBytes",
+                      "reportingEndpoint"
+                    ]
+                  }
+                ]
+              },
+              "inventory": {
+                "type": "object",
+                "properties": {
+                  "auth_enabled_ascii": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "auth_enabled_sasl": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "binding_protocol": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "cas_enabled": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "chunk_size": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "detail_enabled": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "domain_socket": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "dump_enabled": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "evictions": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ext_compact_under": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ext_drop_under": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ext_drop_unread": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ext_item_age": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ext_item_size": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ext_low_ttl": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ext_max_frag": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ext_recache_rate": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ext_wbuf_size": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "flush_enabled": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "growth_factor": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "hash_algorithm": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "hashpower_init": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "hot_lru_pct": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "hot_max_factor": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "idle_timeout": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "inline_ascii_response": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "inter": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "item_size_max": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "lru_crawler": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "lru_crawler_sleep": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "lru_crawler_tocrawl": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "lru_maintainer_thread": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "lru_segmented": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "maxbytes": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "maxconns": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "maxconns_fast": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "memory_file": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "num_napi_ids": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "num_threads": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "num_threads_per_udp": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "oldest": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "read_buf_mem_limit": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "reqs_per_event": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "slab_automove": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "slab_automove_freeratio": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "slab_automove_ratio": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "slab_automove_window": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "slab_chunk_max": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "slab_reassign": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ssl_ca_cert": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ssl_chain_cert": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ssl_ciphers": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ssl_enabled": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ssl_key": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ssl_keyformat": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ssl_session_cache": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ssl_verify_mode": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "ssl_wbuf_size": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "stat_key_prefix": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "tail_repair_time": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "tcp_backlog": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "tcpport": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "temp_lru": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "temporary_ttl": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "track_sizes": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "udpport": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "umask": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "verbosity": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "warm_lru_pct": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "warm_max_factor": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "watcher_logbuf_size": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  },
+                  "worker_logbuf_size": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  }
+                },
+                "required": [
+                  "auth_enabled_ascii",
+                  "auth_enabled_sasl",
+                  "binding_protocol",
+                  "cas_enabled",
+                  "chunk_size",
+                  "detail_enabled",
+                  "domain_socket",
+                  "dump_enabled",
+                  "evictions",
+                  "ext_compact_under",
+                  "ext_drop_under",
+                  "ext_drop_unread",
+                  "ext_item_age",
+                  "ext_item_size",
+                  "ext_low_ttl",
+                  "ext_max_frag",
+                  "ext_recache_rate",
+                  "ext_wbuf_size",
+                  "flush_enabled",
+                  "growth_factor",
+                  "hash_algorithm",
+                  "hashpower_init",
+                  "hot_lru_pct",
+                  "hot_max_factor",
+                  "idle_timeout",
+                  "inline_ascii_response",
+                  "inter",
+                  "item_size_max",
+                  "lru_crawler",
+                  "lru_crawler_sleep",
+                  "lru_crawler_tocrawl",
+                  "lru_maintainer_thread",
+                  "lru_segmented",
+                  "maxbytes",
+                  "maxconns",
+                  "maxconns_fast",
+                  "memory_file",
+                  "num_napi_ids",
+                  "num_threads",
+                  "num_threads_per_udp",
+                  "oldest",
+                  "read_buf_mem_limit",
+                  "reqs_per_event",
+                  "slab_automove",
+                  "slab_automove_freeratio",
+                  "slab_automove_ratio",
+                  "slab_automove_window",
+                  "slab_chunk_max",
+                  "slab_reassign",
+                  "ssl_ca_cert",
+                  "ssl_chain_cert",
+                  "ssl_ciphers",
+                  "ssl_enabled",
+                  "ssl_key",
+                  "ssl_keyformat",
+                  "ssl_session_cache",
+                  "ssl_verify_mode",
+                  "ssl_wbuf_size",
+                  "stat_key_prefix",
+                  "tail_repair_time",
+                  "tcp_backlog",
+                  "tcpport",
+                  "temp_lru",
+                  "temporary_ttl",
+                  "track_sizes",
+                  "udpport",
+                  "umask",
+                  "verbosity",
+                  "warm_lru_pct",
+                  "warm_max_factor",
+                  "watcher_logbuf_size",
+                  "worker_logbuf_size"
+                ]
+              },
+              "events": {
+                "type": "array",
+                "items": {}
+              }
+            },
+            "required": [
+              "entity",
+              "metrics",
+              "inventory",
+              "events"
+            ]
+          }
+        ]
+      }
+    },
+    "required": [
+      "name",
+      "protocol_version",
+      "integration_version",
+      "data"
+    ]
+  }
