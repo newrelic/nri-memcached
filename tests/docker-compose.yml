@@ -9,12 +9,11 @@ services:
   nri-memcached:
     image: golang:1.16
     container_name: nri-memcached
-    working_dir: /go/src/github.com/newrelic/nri-memcached
+    working_dir: /code
     environment: 
+      - CGO_ENABLED=0
     depends_on:
       - memcached
     volumes:
-      - ../:/go/src/github.com/newrelic/nri-memcached
-    environment: 
-      - GO111MODULE=off
+      - ../:/code
     entrypoint: go run github.com/newrelic/nri-memcached/src
