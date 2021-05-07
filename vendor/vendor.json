@@ -91,6 +91,24 @@
 			"path": "github.com/stretchr/testify/mock",
 			"revision": "34c6fa2dc70986bccbbffcc6130f6920a924b075",
 			"revisionTime": "2019-03-04T09:57:49Z"
+		},
+		{
+			"checksumSHA1": "+FM2HP/SgYft90dZ7LTLNkJ7d7I=",
+			"path": "github.com/tidwall/gjson",
+			"revision": "d9710733f0d72d6d4ae982364577eec743ccf96c",
+			"revisionTime": "2021-04-19T16:43:16Z"
+		},
+		{
+			"checksumSHA1": "zp9XfiZmIae+S/tp9VIBDgtHagw=",
+			"path": "github.com/tidwall/match",
+			"revision": "c2f534168b739a7ec1821a33839fb2f029f26bbc",
+			"revisionTime": "2020-12-23T11:58:28Z"
+		},
+		{
+			"checksumSHA1": "Jexrdj3qCfU9RDO+EoKXjXbWZHo=",
+			"path": "github.com/tidwall/pretty",
+			"revision": "a3ee8c7dd2bd3a5371cb7df8392b2d592873d5d6",
+			"revisionTime": "2021-02-23T22:33:35Z"
 		}
 	],
 	"rootPath": "github.com/newrelic/nri-memcached"

@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+
+  memcached:
+    image: memcached:1
+    restart: always
+
+  nri-memcached:
+    image: golang:1.16
+    container_name: nri-memcached
+    working_dir: /go/src/github.com/newrelic/nri-memcached
+    environment: 
+    depends_on:
+      - memcached
+    volumes:
+      - ../:/go/src/github.com/newrelic/nri-memcached
+    environment: 
+      - GO111MODULE=off
+    entrypoint: go run github.com/newrelic/nri-memcached/src
