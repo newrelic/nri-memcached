@@ -15,7 +15,7 @@ type MockClient struct {
 }
 
 // StatsWithKey is a mocked version of the mc.Client object
-func (m MockClient) StatsWithKey(key string) (map[string]mc.McStats, error) {
+func (m *MockClient) StatsWithKey(key string) (map[string]mc.McStats, error) {
 	args := m.Called(key)
 	return args.Get(0).(map[string]mc.McStats), args.Error(1)
 }
@@ -127,7 +127,7 @@ func Test_CollectGeneralStats(t *testing.T) {
 	i, _ := integration.New("test", "test")
 	e, _ := i.Entity("testHost", "mc-instance")
 
-	CollectGeneralStats(client, i)
+	CollectGeneralStats(&client, i)
 
 	assert.Equal(t, 1, len(e.Metrics))
 	assert.Equal(t, float64(999), e.Metrics[0].Metrics["bytesUsedServerInBytes"])
@@ -154,7 +154,7 @@ func Test_CollectSlabStats(t *testing.T) {
 	id2 := integration.NewIDAttribute("host", "testHost")
 	e1, _ := i.Entity("1", "mc-slab", idattr, id2)
 
-	CollectSlabStats(client, i)
+	CollectSlabStats(&client, i)
 
 	assert.Equal(t, 1, len(e1.Metrics))
 	assert.Equal(t, float64(4), e1.Metrics[0].Metrics["chunkSizeInBytes"])
@@ -173,7 +173,7 @@ func Test_CollectItemStats(t *testing.T) {
 
 	i, _ := integration.New("test", "test")
 
-	CollectItemStats(client, i)
+	CollectItemStats(&client, i)
 
 	id1 := integration.NewIDAttribute("mc-slab", "1")
 	idHost := integration.NewIDAttribute("host", "testHost")
@@ -198,7 +198,7 @@ func Test_CollectSettings(t *testing.T) {
 
 	i, _ := integration.New("test", "test")
 
-	CollectSettings(client, i)
+	CollectSettings(&client, i)
 
 	e, _ := i.Entity("testHost", "mc-instance")
 

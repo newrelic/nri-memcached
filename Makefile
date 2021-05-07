@@ -1,54 +1,31 @@
-WORKDIR      := $(shell pwd)
-NATIVEOS	 := $(shell go version | awk -F '[ /]' '{print $$4}')
-NATIVEARCH	 := $(shell go version | awk -F '[ /]' '{print $$5}')
-INTEGRATION  := memcached
-BINARY_NAME   = nri-$(INTEGRATION)
-GO_PKGS      := $(shell go list ./... | grep -v "/vendor/")
-GO_FILES     := ./src/
-GOTOOLS       = gopkg.in/alecthomas/gometalinter.v2 \
-		github.com/axw/gocov/gocov \
-		github.com/stretchr/testify/assert \
-		github.com/AlekSi/gocov-xml \
+WORKDIR         := $(shell pwd)
+INTEGRATION     := memcached
+BINARY_NAME      = nri-$(INTEGRATION)
+GO_FILES        := ./src/
+GOFLAGS          = -mod=readonly
+GOLANGCI_LINT    = github.com/golangci/golangci-lint/cmd/golangci-lint
+GOCOV            = github.com/axw/gocov/gocov
+GOCOV_XML        = github.com/AlekSi/gocov-xml
 
 all: build
 
-build: check-version clean validate test compile
+build: clean validate test compile
 
 clean:
 	@echo "=== $(INTEGRATION) === [ clean ]: Removing binaries and coverage file..."
 	@rm -rfv bin coverage.xml
 
-tools: check-version
-	@echo "=== $(INTEGRATION) === [ tools ]: Installing tools required by the project..."
-	# @go get $(GOTOOLS)
-	# @gometalinter.v2 --install
-
-tools-update: check-version
-	@echo "=== $(INTEGRATION) === [ tools-update ]: Updating tools required by the project..."
-	# @go get -u $(GOTOOLS)
-	# @gometalinter.v2 --install
-
-deps: tools 
-
-validate: deps
+validate: 
 	@echo "=== $(INTEGRATION) === [ validate ]: Validating source code running gometalinter..."
-	# @gometalinter.v2 --config=.gometalinter.json $(GO_FILES)...
+	@go run $(GOFLAGS) $(GOLANGCI_LINT) run --verbose
 
-validate-all: deps
-	@echo "=== $(INTEGRATION) === [ validate ]: Validating source code running gometalinter..."
-	# @gometalinter.v2 --config=.gometalinter.json --enable=interfacer --enable=gosimple $(GO_FILES)...
-
-compile: deps
+compile: 
 	@echo "=== $(INTEGRATION) === [ compile ]: Building $(BINARY_NAME)..."
 	@go build -o bin/$(BINARY_NAME) $(GO_FILES)
 
-compile-only: 
-	@echo "=== $(INTEGRATION) === [ compile ]: Building $(BINARY_NAME)..."
-	@go build -o bin/$(BINARY_NAME) $(GO_FILES)
-
-test: deps
+test: 
 	@echo "=== $(INTEGRATION) === [ test ]: Running unit tests..."
-	@gocov test -race $(GO_FILES)... | gocov-xml > coverage.xml
+	@go run $(GOFLAGS) $(GOCOV) test ./... | go run $(GOFLAGS) $(GOCOV_XML) > coverage.xml
 
 integration-test:
 	@echo "=== $(INTEGRATION) === [ test ]: running integration tests..."
@@ -60,16 +37,4 @@ integration-test:
 include $(CURDIR)/build/ci.mk
 include $(CURDIR)/build/release.mk
 
-check-version:
-ifdef GOOS
-ifneq "$(GOOS)" "$(NATIVEOS)"
-	$(error GOOS is not $(NATIVEOS). Cross-compiling is only allowed for 'clean', 'deps-only' and 'compile-only' targets)
-endif
-endif
-ifdef GOARCH
-ifneq "$(GOARCH)" "$(NATIVEARCH)"
-	$(error GOARCH variable is not $(NATIVEARCH). Cross-compiling is only allowed for 'clean', 'deps-only' and 'compile-only' targets)
-endif
-endif
-
-.PHONY: all build clean tools tools-update deps validate compile test check-version integration-test
+.PHONY: all build clean validate compile test  integration-test
