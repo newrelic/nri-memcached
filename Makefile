@@ -4,8 +4,6 @@ BINARY_NAME      = nri-$(INTEGRATION)
 GO_FILES        := ./src/
 GOFLAGS          = -mod=readonly
 GOLANGCI_LINT    = github.com/golangci/golangci-lint/cmd/golangci-lint
-GOCOV            = github.com/axw/gocov/gocov
-GOCOV_XML        = github.com/AlekSi/gocov-xml
 
 all: build
 
@@ -15,9 +13,11 @@ clean:
 	@echo "=== $(INTEGRATION) === [ clean ]: Removing binaries and coverage file..."
 	@rm -rfv bin coverage.xml
 
-validate: 
-	@echo "=== $(INTEGRATION) === [ validate ]: Validating source code running gometalinter..."
-	@go run $(GOFLAGS) $(GOLANGCI_LINT) run --verbose
+validate:
+	@printf "=== $(INTEGRATION) === [ validate ]: running golangci-lint & semgrep... "
+	@go run  $(GOFLAGS) $(GOLANGCI_LINT) run --verbose
+	@[ -f .semgrep.yml ] && semgrep_config=".semgrep.yml" || semgrep_config="p/golang" ; \
+	docker run --rm -v "${PWD}:/src:ro" --workdir /src returntocorp/semgrep -c "$$semgrep_config"
 
 compile: 
 	@echo "=== $(INTEGRATION) === [ compile ]: Building $(BINARY_NAME)..."
@@ -25,7 +25,7 @@ compile:
 
 test: 
 	@echo "=== $(INTEGRATION) === [ test ]: Running unit tests..."
-	@go run $(GOFLAGS) $(GOCOV) test ./... | go run $(GOFLAGS) $(GOCOV_XML) > coverage.xml
+	@go test -race ./... -count=1
 
 integration-test:
 	@echo "=== $(INTEGRATION) === [ test ]: running integration tests..."

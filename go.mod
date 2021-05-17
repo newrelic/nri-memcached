@@ -3,8 +3,6 @@ module github.com/newrelic/nri-memcached
 go 1.16
 
 require (
-	github.com/AlekSi/gocov-xml v0.0.0-20190121064608-3a14fb1c4737
-	github.com/axw/gocov v1.0.0
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/golangci/golangci-lint v1.39.0
 	github.com/memcachier/mc v2.0.2-0.20181103130939-5d1620e2c6d8+incompatible
