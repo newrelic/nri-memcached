@@ -4,19 +4,19 @@ integrations:
 
     # Memcached SASL username. Only required if
     # authentication is enabled.
-    username: cacheuser
+    USERNAME: cacheuser
 
     # Memcached SASL password. Only required if
     # authentication is enabled.
-    password: password
+    PASSWORD: password
 
     # Port memcached is running on.
     # Defaults to 11211
-    port: "11211"
+    PORT: "11211"
 
     # Hostname of the memcached instance.
     # Defaults to localhost.
-    host: memcached_host
+    HOST: memcached_host
 
   interval: 15s
   inventory_source: config/memcached
