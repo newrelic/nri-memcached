@@ -1,20 +1,22 @@
+integrations:
+- name: nri-memcached
+  env:
 
-integration_name: com.newrelic.memcached
+    # Memcached SASL username. Only required if
+    # authentication is enabled.
+    USERNAME: cacheuser
 
-instances:
-  - name: memcached
-    # Command can be all_data, metrics, or inventory
-    command: all_data
-    arguments:
-      # Hostname of the memcached instance.
-      # Defaults to localhost.
-      host: memcached_host
-      # Port memcached is running on.
-      # Defaults to 11211
-      port: 11211
-      # Memcached SASL username. Only required if
-      # authentication is enabled.
-      username: cacheuser
-      # Memcached SASL password. Only required if
-      # authentication is enabled.
-      password: password
+    # Memcached SASL password. Only required if
+    # authentication is enabled.
+    PASSWORD: password
+
+    # Port memcached is running on.
+    # Defaults to 11211
+    PORT: "11211"
+
+    # Hostname of the memcached instance.
+    # Defaults to localhost.
+    HOST: memcached_host
+
+  interval: 15s
+  inventory_source: config/memcached
