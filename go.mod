@@ -4,9 +4,9 @@ go 1.18
 
 require (
 	github.com/memcachier/mc v2.0.2-0.20181103130939-5d1620e2c6d8+incompatible
-	github.com/mitchellh/mapstructure v1.4.1
-	github.com/newrelic/infra-integrations-sdk v3.6.7+incompatible
-	github.com/stretchr/testify v1.7.0
+	github.com/mitchellh/mapstructure v1.5.0
+	github.com/newrelic/infra-integrations-sdk v3.7.2+incompatible
+	github.com/stretchr/testify v1.7.1
 	github.com/xeipuuv/gojsonschema v1.2.0
 )
 
