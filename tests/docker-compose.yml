@@ -7,7 +7,7 @@ services:
     restart: always
 
   nri-memcached:
-    image: golang:1.16
+    image: golang:1.18
     container_name: nri-memcached
     working_dir: /code
     environment: 
