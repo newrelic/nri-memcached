@@ -36,10 +36,8 @@ type GeneralStats struct {
 	EvictedUnfetched       *int     `mapstructure:"evicted_unfetched"`
 	ConnectionStructures   *int     `mapstructure:"connection_structures" metric_name:"connectionStructuresAllocated"     source_type:"gauge"`
 	CurrConnections        *int     `mapstructure:"curr_connections"      metric_name:"openConnectionsServer"             source_type:"gauge"`
-	TotalConnections       *int     `mapstructure:"total_connections"     metric_name:"connectionRateServerPerSecond"     source_type:"rate"`
-	ConnYields             *int     `mapstructure:"conn_yields"           metric_name:"serverMaxConnectionLimitPerSecond" source_type:"rate"`
-	RusageUser             *float64 `mapstructure:"rusage_user"           metric_name:"executionTime"                     source_type:"rate"`
-	RusageSystem           *float64 `mapstructure:"rusage_system"         metric_name:"usageRate"                         source_type:"rate"`
+	RusageUser             *float64 `mapstructure:"rusage_user"           metric_name:"executionTime"                     source_type:"prate"`
+	RusageSystem           *float64 `mapstructure:"rusage_system"         metric_name:"usageRate"                         source_type:"prate"`
 	PID                    *int     `mapstructure:"pid"`
 	LogWatcherSkipped      *int     `mapstructure:"log_watcher_skipped"`
 	CrawlerItemsChecked    *int     `mapstructure:"crawler_items_checked"`
