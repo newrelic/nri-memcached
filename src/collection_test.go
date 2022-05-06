@@ -2,9 +2,11 @@ package main
 
 import (
 	"testing"
+	"time"
 
 	"github.com/memcachier/mc"
 	"github.com/newrelic/infra-integrations-sdk/integration"
+	"github.com/newrelic/infra-integrations-sdk/persist"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -101,7 +103,6 @@ func Test_processSettings(t *testing.T) {
 	e, _ := i.Entity("testHost", "mc-instance")
 
 	assert.Equal(t, "val1", e.Inventory.Items()["test1"]["value"])
-
 }
 
 func Test_CollectGeneralStats(t *testing.T) {
@@ -135,7 +136,6 @@ func Test_CollectGeneralStats(t *testing.T) {
 	assert.Equal(t, float64(3.0), e.Metrics[0].Metrics["avgItemSizeInBytes"])
 	assert.Equal(t, float64(10), e.Metrics[0].Metrics["storingItemsPercentMemory"])
 	assert.Equal(t, float64(44), e.Metrics[0].Metrics["getHitPercent"])
-
 }
 
 func Test_CollectSlabStats(t *testing.T) {
@@ -203,4 +203,30 @@ func Test_CollectSettings(t *testing.T) {
 	e, _ := i.Entity("testHost", "mc-instance")
 
 	assert.Equal(t, "val1", e.Inventory.Items()["test1"]["value"])
+}
+
+func Test_PerSecondMetricsIsNotReported(t *testing.T) {
+	client := MockClient{}
+	stats := map[string]mc.McStats{
+		"testHost": {
+			"items:2:evicted": "10",
+		},
+	}
+	client.On("StatsWithKey", "items").Return(stats, nil)
+
+	i, _ := integration.New("test", "test", integration.Storer(persist.NewInMemoryStore()))
+
+	CollectItemStats(&client, i)
+
+	t.Run("when_a_metric_decrease_it_value", func(t *testing.T) {
+		stats["testHost"] = mc.McStats{"items:2:evicted": "5"}
+
+		// sleeps gives a time gap needed to compute the delta for the rate type metric.
+		time.Sleep(time.Second)
+
+		CollectItemStats(&client, i)
+
+		assert.Equal(t, float64(0), i.Entities[0].Metrics[0].Metrics["evictionsBeforeExpirationPerSecond"])
+		assert.NotContains(t, i.Entities[0].Metrics[1].Metrics, "evictionsBeforeExpirationPerSecond")
+	})
 }
