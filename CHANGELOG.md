@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.4.0 (2022-05-09)
+### Fixed
+- Use `prate` for metrics that report `*.PerSecond` stats. This prevents that metrics have negative values which is unexpected for this kind of metric.
+- Use `prate` for metrics that are reported as counters (accumulators) by the service. This prevent the metric has negative values if the counter resets.
+### Changed
+- bump dependencies:
+    `github.com/mitchellh/mapstructure v1.5.0`
+	`github.com/newrelic/infra-integrations-sdk v3.7.2+incompatible`
+	`github.com/stretchr/testify v1.7.1`
+- change pipeline to compile with Go 1.18
+
 ## 2.3.2 (2021-10-20)
 ### Added
 Added support for more distributions:
