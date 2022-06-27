@@ -1,4 +1,4 @@
-FROM golang:1.10 as builder
+FROM golang:1.18 as builder
 COPY . /go/src/github.com/newrelic/nri-memcached/
 RUN cd /go/src/github.com/newrelic/nri-memcached && \
     make && \

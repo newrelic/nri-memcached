@@ -3,23 +3,16 @@ INTEGRATION     := memcached
 BINARY_NAME      = nri-$(INTEGRATION)
 GO_FILES        := ./src/
 GOFLAGS          = -mod=readonly
-GOLANGCI_LINT    = github.com/golangci/golangci-lint/cmd/golangci-lint
 
 all: build
 
-build: clean validate test compile
+build: clean test compile
 
 clean:
-	@echo "=== $(INTEGRATION) === [ clean ]: Removing binaries and coverage file..."
-	@rm -rfv bin coverage.xml
+	@echo "=== $(INTEGRATION) === [ clean ]: Removing binaries..."
+	@rm -rfv bin
 
-validate:
-	@printf "=== $(INTEGRATION) === [ validate ]: running golangci-lint & semgrep... "
-	@go run  $(GOFLAGS) $(GOLANGCI_LINT) run --verbose
-	@[ -f .semgrep.yml ] && semgrep_config=".semgrep.yml" || semgrep_config="p/golang" ; \
-	docker run --rm -v "${PWD}:/src:ro" --workdir /src returntocorp/semgrep -c "$$semgrep_config"
-
-compile: 
+compile:
 	@echo "=== $(INTEGRATION) === [ compile ]: Building $(BINARY_NAME)..."
 	@go build -o bin/$(BINARY_NAME) $(GO_FILES)
 
@@ -37,4 +30,4 @@ integration-test:
 include $(CURDIR)/build/ci.mk
 include $(CURDIR)/build/release.mk
 
-.PHONY: all build clean validate compile test  integration-test
+.PHONY: all build clean compile test  integration-test
