@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.4.1  (2022-06-28)
+
+### Changed
+- Bump dependencies
+### Added
+Added support for more distributions:
+- RHEL(EL) 9
+- Ubuntu 22.04
+
 ## 2.4.0 (2022-05-09)
 ### Fixed
 - Use `prate` for metrics that report `*.PerSecond` stats. This prevents that metrics have negative values which is unexpected for this kind of metric.
