@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/memcachier/mc v2.0.2-0.20181103130939-5d1620e2c6d8+incompatible
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/newrelic/infra-integrations-sdk v3.7.3+incompatible
+	github.com/newrelic/infra-integrations-sdk v3.8.0+incompatible
 	github.com/stretchr/testify v1.8.4
 	github.com/xeipuuv/gojsonschema v1.2.0
 )
