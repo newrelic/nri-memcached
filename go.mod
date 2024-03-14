@@ -3,7 +3,7 @@ module github.com/newrelic/nri-memcached
 go 1.21.7
 
 require (
-	github.com/memcachier/mc v2.0.2-0.20181103130939-5d1620e2c6d8+incompatible
+	github.com/memcachier/mc 3f3c9a26fc0b
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/newrelic/infra-integrations-sdk v3.8.2+incompatible
 	github.com/stretchr/testify v1.9.0
