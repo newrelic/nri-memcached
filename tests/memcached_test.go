@@ -1,3 +1,4 @@
+//go:build integration
 // +build integration
 
 package tests
@@ -30,8 +31,9 @@ func executeDockerCompose(containerName string, envVars []string) (string, strin
 		cmdLine = append(cmdLine, envVars[i])
 	}
 	cmdLine = append(cmdLine, containerName)
-	fmt.Printf("executing: docker-compose %s\n", strings.Join(cmdLine, " "))
-	cmd := exec.Command("docker-compose", cmdLine...)
+	cmdLine = append([]string{"compose"}, cmdLine...)
+	fmt.Printf("executing: docker %s\n", strings.Join(cmdLine, " "))
+	cmd := exec.Command("docker", cmdLine...)
 	var outbuf, errbuf bytes.Buffer
 	cmd.Stdout = &outbuf
 	cmd.Stderr = &errbuf
