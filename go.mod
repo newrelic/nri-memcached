@@ -5,7 +5,7 @@ go 1.23.1
 require (
 	github.com/memcachier/mc v2.0.2-0.20181103130939-5d1620e2c6d8+incompatible
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/newrelic/infra-integrations-sdk v3.8.2+incompatible
+	github.com/newrelic/infra-integrations-sdk/v3 v3.9.1
 	github.com/stretchr/testify v1.9.0
 	github.com/xeipuuv/gojsonschema v1.2.0
 )
