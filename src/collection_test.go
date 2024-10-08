@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/memcachier/mc"
-	"github.com/newrelic/infra-integrations-sdk/integration"
-	"github.com/newrelic/infra-integrations-sdk/persist"
+	"github.com/newrelic/infra-integrations-sdk/v3/integration"
+	"github.com/newrelic/infra-integrations-sdk/v3/persist"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
