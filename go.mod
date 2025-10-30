@@ -1,6 +1,6 @@
 module github.com/newrelic/nri-memcached
 
-go 1.24.6
+go 1.25.3
 
 require (
 	github.com/memcachier/mc v2.0.2-0.20181103130939-5d1620e2c6d8+incompatible
